@@ -62,7 +62,7 @@ const Navbar = () => {
           {/* Right Side Controls */}
           <div className="flex items-center space-x-4">
             {/* Search */}
-            <Button variant="ghost" size="sm" className="hidden lg:flex text-muted-foreground hover:text-primary">
+            <Button variant="ghost" size="sm" className="hidden lg:flex navbar-button">
               <Search className="h-5 w-5" />
             </Button>
 
@@ -71,20 +71,20 @@ const Navbar = () => {
               variant="ghost" 
               size="sm" 
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="text-muted-foreground hover:text-primary"
+              className="navbar-button"
             >
               {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
 
             {/* Language/Region */}
-            <Button variant="ghost" size="sm" className="hidden lg:flex text-muted-foreground hover:text-primary">
+            <Button variant="ghost" size="sm" className="hidden lg:flex navbar-button">
               <Globe className="h-4 w-4 mr-2" />
               EN
               <ChevronDown className="h-3 w-3 ml-1" />
             </Button>
 
             {/* Notifications */}
-            <Button variant="ghost" size="sm" className="relative text-muted-foreground hover:text-primary">
+            <Button variant="ghost" size="sm" className="relative navbar-button">
               <Bell className="h-5 w-5" />
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></div>
             </Button>
@@ -129,7 +129,7 @@ const Navbar = () => {
             )}
 
             {/* Mobile Menu */}
-            <Button variant="ghost" size="sm" className="lg:hidden">
+            <Button variant="ghost" size="sm" className="lg:hidden navbar-button">
               <Menu className="h-5 w-5" />
             </Button>
           </div>

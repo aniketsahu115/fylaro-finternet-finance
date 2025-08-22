@@ -202,4 +202,47 @@
     --rk-colors-selectedOptionBorder: hsl(var(--primary));
     --rk-colors-standby: hsl(var(--muted-foreground));
   }
+
+  /* Custom navbar button styling */
+  .navbar-button {
+    color: hsl(var(--muted-foreground));
+    transition: all 0.2s ease;
+  }
+
+  .navbar-button:hover {
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--accent) / 0.5);
+  }
+
+  .navbar-button svg {
+    transition: all 0.2s ease;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .navbar-button:hover svg {
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: inherit;
+  }
+
+  /* Ensure all button icons remain visible */
+  button svg {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  button:hover svg,
+  button:focus svg,
+  button:active svg {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  /* Prevent any CSS that might hide icons */
+  nav button svg {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
 }

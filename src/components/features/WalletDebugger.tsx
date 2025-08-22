@@ -18,8 +18,8 @@ export const WalletDebugger = () => {
     toast.success('Copied to clipboard');
   };
 
-  if (!import.meta.env.DEV && !window.location.hostname.includes('localhost')) {
-    return null; // Only show in development
+  if (!import.meta.env.DEV || import.meta.env.PROD) {
+    return null; // Only show in development, hide in production
   }
 
   return (
