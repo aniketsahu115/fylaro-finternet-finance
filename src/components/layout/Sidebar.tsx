@@ -70,7 +70,7 @@ const Sidebar = ({ className }: SidebarProps) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="h-8 w-8 rounded-lg overflow-hidden">
-              <img src="/src/assets/fylaro-logo.png" alt="Fylaro Logo" className="w-full h-full object-cover" />
+              <img src="/src/assets/fylaro-logo-icon.png" alt="Fylaro Logo" className="w-full h-full object-cover" />
             </div>
             {!collapsed && (
               <div>

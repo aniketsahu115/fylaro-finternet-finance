@@ -25,7 +25,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="w-10 h-10 rounded-lg overflow-hidden group-hover:scale-110 transition-smooth">
-              <img src="/src/assets/fylaro-logo.png" alt="Fylaro Logo" className="w-full h-full object-cover" />
+              <img src="/src/assets/fylaro-logo-icon.png" alt="Fylaro Logo" className="w-full h-full object-cover" />
             </div>
             <span className="text-2xl font-bold text-foreground">Fylaro</span>
           </Link>
