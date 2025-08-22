@@ -69,8 +69,8 @@ const Sidebar = ({ className }: SidebarProps) => {
       <div className="p-6 border-b border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">F</span>
+            <div className="h-8 w-8 rounded-lg overflow-hidden">
+              <img src="/src/assets/fylaro-logo.png" alt="Fylaro Logo" className="w-full h-full object-cover" />
             </div>
             {!collapsed && (
               <div>
