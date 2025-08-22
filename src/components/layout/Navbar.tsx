@@ -8,15 +8,28 @@ import {
   Globe,
   ChevronDown,
   Sun,
-  Moon
+  Moon,
+  AlertTriangle
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useTheme } from "next-themes";
+import { useWallet } from "@/hooks/useWallet";
+import { WalletConnectModal } from "@/components/features/WalletConnectModal";
+import { toast } from "sonner";
 
 const Navbar = () => {
-  const [isConnected, setIsConnected] = useState(false);
   const { theme, setTheme } = useTheme();
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const { 
+    isConnected, 
+    address, 
+    isConnecting, 
+    disconnectWallet, 
+    formatAddress,
+    isOnBSC,
+    switchToBSC 
+  } = useWallet();
 
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
@@ -79,25 +92,39 @@ const Navbar = () => {
             {/* Wallet Connection */}
             {isConnected ? (
               <div className="flex items-center space-x-3">
-                <Badge className="bg-success/10 text-success border-success/30 hidden lg:flex">
-                  Connected
-                </Badge>
+                <div className="flex items-center space-x-2">
+                  {!isOnBSC && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={switchToBSC}
+                      className="border-warning/30 text-warning hover:bg-warning/10"
+                    >
+                      <AlertTriangle className="h-3 w-3 mr-1" />
+                      Switch to BSC
+                    </Button>
+                  )}
+                  <Badge className={`${isOnBSC ? 'bg-success/10 text-success border-success/30' : 'bg-warning/10 text-warning border-warning/30'} hidden lg:flex`}>
+                    {isOnBSC ? 'BSC Connected' : 'Wrong Network'}
+                  </Badge>
+                </div>
                 <Button 
                   variant="outline" 
                   className="border-primary/30 text-foreground hover:bg-primary/10"
-                  onClick={() => setIsConnected(false)}
+                  onClick={disconnectWallet}
                 >
                   <Wallet className="h-4 w-4 mr-2" />
-                  0x1234...5678
+                  {formatAddress(address)}
                 </Button>
               </div>
             ) : (
               <Button 
                 className="glow"
-                onClick={() => setIsConnected(true)}
+                onClick={() => setIsWalletModalOpen(true)}
+                disabled={isConnecting}
               >
                 <Wallet className="h-4 w-4 mr-2" />
-                Connect Wallet
+                {isConnecting ? 'Connecting...' : 'Connect Wallet'}
               </Button>
             )}
 
@@ -108,6 +135,12 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Wallet Connect Modal */}
+      <WalletConnectModal 
+        isOpen={isWalletModalOpen} 
+        onClose={() => setIsWalletModalOpen(false)} 
+      />
     </nav>
   );
 };

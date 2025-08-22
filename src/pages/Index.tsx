@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/layout/Navbar";
+import { WalletDebugger } from "@/components/features/WalletDebugger";
+import { WalletTestComponent } from "@/components/features/WalletTestComponent";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
@@ -99,6 +101,11 @@ const Index = () => {
                   Explore Marketplace
                 </Button>
               </div>
+            </div>
+
+            {/* Wallet Test Component - For Debugging */}
+            <div className="my-8">
+              <WalletTestComponent />
             </div>
 
             {/* Live Stats Dashboard */}
@@ -353,6 +360,7 @@ const Index = () => {
           </div>
         </div>
       </footer>
+      <WalletDebugger />
     </div>
   );
 };
