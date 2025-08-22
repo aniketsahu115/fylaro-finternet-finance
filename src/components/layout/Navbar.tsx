@@ -1,70 +1,97 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bell, Wallet, User, ChevronDown } from "lucide-react";
+import {
+  Bell,
+  Wallet,
+  Menu,
+  Search,
+  Globe,
+  ChevronDown
+} from "lucide-react";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const Navbar = () => {
   const [isConnected, setIsConnected] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-16 items-center justify-between px-6">
-        {/* Logo */}
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">F</span>
+    <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
+      <div className="container mx-auto px-6">
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center group-hover:scale-110 transition-smooth">
+              <span className="text-primary-foreground font-bold text-xl">F</span>
             </div>
-            <span className="text-xl font-bold text-gradient">Fylaro</span>
+            <span className="text-2xl font-bold text-foreground">Fylaro</span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-8">
+            <Link to="/marketplace" className="text-muted-foreground hover:text-primary transition-colors font-medium">
+              Marketplace
+            </Link>
+            <Link to="/dashboard" className="text-muted-foreground hover:text-primary transition-colors font-medium">
+              Dashboard
+            </Link>
+            <Link to="/portfolio" className="text-muted-foreground hover:text-primary transition-colors font-medium">
+              Portfolio
+            </Link>
+            <Link to="/trading" className="text-muted-foreground hover:text-primary transition-colors font-medium">
+              Trading
+            </Link>
           </div>
-          <Badge variant="secondary" className="text-xs">
-            Finternet
-          </Badge>
-        </div>
 
-        {/* Navigation */}
-        <div className="hidden md:flex items-center space-x-8">
-          <a href="/marketplace" className="text-sm font-medium hover:text-primary transition-smooth">
-            Marketplace
-          </a>
-          <a href="/dashboard" className="text-sm font-medium hover:text-primary transition-smooth">
-            Dashboard
-          </a>
-          <a href="/portfolio" className="text-sm font-medium hover:text-primary transition-smooth">
-            Portfolio
-          </a>
-          <a href="/trading" className="text-sm font-medium hover:text-primary transition-smooth">
-            Trading
-          </a>
-        </div>
-
-        {/* Right Side */}
-        <div className="flex items-center space-x-4">
-          {/* Notifications */}
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-primary rounded-full"></span>
-          </Button>
-
-          {/* Wallet Connection */}
-          {isConnected ? (
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" className="flex items-center space-x-2">
-                <Wallet className="h-4 w-4" />
-                <span className="hidden sm:inline">0x1234...5678</span>
-              </Button>
-              <Button variant="ghost" size="icon">
-                <User className="h-5 w-5" />
-              </Button>
-            </div>
-          ) : (
-            <Button 
-              onClick={() => setIsConnected(true)}
-              className="glow"
-            >
-              Connect Wallet
+          {/* Right Side Controls */}
+          <div className="flex items-center space-x-4">
+            {/* Search */}
+            <Button variant="ghost" size="sm" className="hidden lg:flex text-muted-foreground hover:text-primary">
+              <Search className="h-5 w-5" />
             </Button>
-          )}
+
+            {/* Language/Region */}
+            <Button variant="ghost" size="sm" className="hidden lg:flex text-muted-foreground hover:text-primary">
+              <Globe className="h-4 w-4 mr-2" />
+              EN
+              <ChevronDown className="h-3 w-3 ml-1" />
+            </Button>
+
+            {/* Notifications */}
+            <Button variant="ghost" size="sm" className="relative text-muted-foreground hover:text-primary">
+              <Bell className="h-5 w-5" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></div>
+            </Button>
+
+            {/* Wallet Connection */}
+            {isConnected ? (
+              <div className="flex items-center space-x-3">
+                <Badge className="bg-success/10 text-success border-success/30 hidden lg:flex">
+                  Connected
+                </Badge>
+                <Button 
+                  variant="outline" 
+                  className="border-primary/30 text-foreground hover:bg-primary/10"
+                  onClick={() => setIsConnected(false)}
+                >
+                  <Wallet className="h-4 w-4 mr-2" />
+                  0x1234...5678
+                </Button>
+              </div>
+            ) : (
+              <Button 
+                className="glow"
+                onClick={() => setIsConnected(true)}
+              >
+                <Wallet className="h-4 w-4 mr-2" />
+                Connect Wallet
+              </Button>
+            )}
+
+            {/* Mobile Menu */}
+            <Button variant="ghost" size="sm" className="lg:hidden">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </div>
     </nav>

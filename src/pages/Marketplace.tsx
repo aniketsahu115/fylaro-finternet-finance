@@ -112,7 +112,7 @@ const Marketplace = () => {
         </div>
 
         {/* Filters */}
-        <Card className="gradient-card border-border">
+        <Card className="glass-card">
           <CardContent className="pt-6">
             <div className="flex flex-wrap gap-4">
               <div className="flex-1 min-w-[200px]">
@@ -120,12 +120,12 @@ const Marketplace = () => {
                   <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search by company or invoice ID..."
-                    className="pl-10"
+                    className="pl-10 bg-secondary/50 border-border/50"
                   />
                 </div>
               </div>
               <Select>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] bg-secondary/50 border-border/50">
                   <SelectValue placeholder="Industry" />
                 </SelectTrigger>
                 <SelectContent>
@@ -137,7 +137,7 @@ const Marketplace = () => {
                 </SelectContent>
               </Select>
               <Select>
-                <SelectTrigger className="w-[150px]">
+                <SelectTrigger className="w-[150px] bg-secondary/50 border-border/50">
                   <SelectValue placeholder="Risk Level" />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,7 +148,7 @@ const Marketplace = () => {
                 </SelectContent>
               </Select>
               <Select>
-                <SelectTrigger className="w-[150px]">
+                <SelectTrigger className="w-[150px] bg-secondary/50 border-border/50">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
@@ -159,7 +159,7 @@ const Marketplace = () => {
                   <SelectItem value="time-asc">Time Remaining</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline">
+              <Button variant="outline" className="border-primary/30 hover:bg-primary/10">
                 <Filter className="h-4 w-4 mr-2" />
                 Filters
               </Button>
@@ -170,7 +170,7 @@ const Marketplace = () => {
         {/* Invoice Listings */}
         <div className="grid gap-6 lg:grid-cols-2">
           {invoiceListings.map((invoice) => (
-            <Card key={invoice.id} className="gradient-card border-border hover:glow transition-smooth">
+            <Card key={invoice.id} className="glass-card hover:highlight-border transition-smooth group">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
@@ -188,7 +188,7 @@ const Marketplace = () => {
                   </div>
                   <Badge 
                     variant="secondary"
-                    className={getRiskColor(invoice.riskLevel)}
+                    className={`${getRiskColor(invoice.riskLevel)} bg-secondary/50`}
                   >
                     {invoice.riskLevel} Risk
                   </Badge>
@@ -225,7 +225,7 @@ const Marketplace = () => {
                 </div>
 
                 {/* Credit Score and Metrics */}
-                <div className="grid grid-cols-3 gap-4 pt-2 border-t border-border">
+                <div className="grid grid-cols-3 gap-4 pt-2 border-t border-border/50">
                   <div className="text-center">
                     <div className="flex items-center justify-center space-x-1">
                       <Star className="h-4 w-4 text-primary" />
@@ -251,11 +251,11 @@ const Marketplace = () => {
 
                 {/* Action Buttons */}
                 <div className="flex space-x-2 pt-2">
-                  <Button className="flex-1 glow">
+                  <Button className="flex-1 glow group-hover:scale-105 transition-smooth">
                     <Target className="h-4 w-4 mr-2" />
                     Invest Now
                   </Button>
-                  <Button variant="outline" className="flex-1">
+                  <Button variant="outline" className="flex-1 border-primary/30 hover:bg-primary/10">
                     View Details
                   </Button>
                 </div>

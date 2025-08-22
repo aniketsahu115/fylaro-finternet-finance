@@ -94,7 +94,7 @@ const Dashboard = () => {
         {/* Stats Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
-            <Card key={stat.title} className="gradient-card border-border">
+            <Card key={stat.title} className="glass-card hover:highlight-border transition-smooth">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   {stat.title}
@@ -122,7 +122,7 @@ const Dashboard = () => {
         {/* Content Grid */}
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Recent Invoices */}
-          <Card className="lg:col-span-2 gradient-card border-border">
+          <Card className="lg:col-span-2 glass-card hover:highlight-border transition-smooth">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Recent Invoices</CardTitle>
@@ -137,14 +137,14 @@ const Dashboard = () => {
                 {recentInvoices.map((invoice) => (
                   <div
                     key={invoice.id}
-                    className="flex items-center justify-between p-4 border border-border rounded-lg bg-background/50"
+                    className="flex items-center justify-between p-4 border border-border rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-smooth"
                   >
                     <div className="space-y-1">
                       <div className="flex items-center space-x-2">
                         <span className="font-medium">{invoice.id}</span>
                         <Badge 
                           variant={invoice.status === "Funded" ? "default" : "secondary"}
-                          className={invoice.status === "Funded" ? "bg-success" : ""}
+                          className={invoice.status === "Funded" ? "bg-success text-success-foreground" : ""}
                         >
                           {invoice.status}
                         </Badge>
@@ -168,7 +168,7 @@ const Dashboard = () => {
           </Card>
 
           {/* Quick Actions */}
-          <Card className="gradient-card border-border">
+          <Card className="glass-card hover:highlight-border transition-smooth">
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
@@ -177,15 +177,15 @@ const Dashboard = () => {
                 <Upload className="h-4 w-4 mr-2" />
                 Upload New Invoice
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10">
                 <Eye className="h-4 w-4 mr-2" />
                 Browse Marketplace
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10">
                 <TrendingUp className="h-4 w-4 mr-2" />
                 View Analytics
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10">
                 <Users className="h-4 w-4 mr-2" />
                 Investor Network
               </Button>
@@ -194,11 +194,11 @@ const Dashboard = () => {
         </div>
 
         {/* Credit Score */}
-        <Card className="gradient-card border-border">
+        <Card className="glass-card hover:highlight-border transition-smooth">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Credit Score & Rating</CardTitle>
-              <Badge className="bg-success">Excellent</Badge>
+              <Badge className="bg-success/10 text-success border-success/30">Excellent</Badge>
             </div>
           </CardHeader>
           <CardContent>
