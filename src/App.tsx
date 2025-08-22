@@ -11,6 +11,8 @@ import Portfolio from "./pages/Portfolio";
 import PaymentTracker from "./pages/PaymentTracker";
 import Trading from "./pages/Trading";
 import UploadInvoice from "./pages/UploadInvoice";
+import InvestmentDetails from "./pages/InvestmentDetails";
+import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +32,8 @@ const App = () => (
           <Route path="/payments" element={<PaymentTracker />} />
           <Route path="/trading" element={<Trading />} />
           <Route path="/upload" element={<UploadInvoice />} />
+          <Route path="/investment/:invoiceId" element={<InvestmentDetails />} />
+          <Route path="/analytics" element={<Analytics />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
