@@ -6,13 +6,17 @@ import {
   Menu,
   Search,
   Globe,
-  ChevronDown
+  ChevronDown,
+  Sun,
+  Moon
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useTheme } from "next-themes";
 
 const Navbar = () => {
   const [isConnected, setIsConnected] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
@@ -47,6 +51,16 @@ const Navbar = () => {
             {/* Search */}
             <Button variant="ghost" size="sm" className="hidden lg:flex text-muted-foreground hover:text-primary">
               <Search className="h-5 w-5" />
+            </Button>
+
+            {/* Theme Toggle */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="text-muted-foreground hover:text-primary"
+            >
+              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
 
             {/* Language/Region */}

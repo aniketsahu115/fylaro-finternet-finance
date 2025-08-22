@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/layout/Navbar";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   Shield,
@@ -19,6 +20,7 @@ import {
 } from "lucide-react";
 
 const Index = () => {
+  const navigate = useNavigate();
   const features = [
     {
       icon: Shield,
@@ -80,11 +82,20 @@ const Index = () => {
                 with unprecedented speed and transparency.
               </p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                <Button size="lg" className="text-lg px-8 py-4 glow h-auto">
+                <Button 
+                  size="lg" 
+                  className="text-lg px-8 py-4 glow h-auto"
+                  onClick={() => navigate('/trading')}
+                >
                   Start Trading Invoices
                   <ArrowRight className="ml-3 h-6 w-6" />
                 </Button>
-                <Button size="lg" variant="outline" className="text-lg px-8 py-4 h-auto border-primary/30 text-foreground hover:bg-primary/10">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="text-lg px-8 py-4 h-auto border-primary/30 text-foreground hover:bg-primary/10"
+                  onClick={() => navigate('/marketplace')}
+                >
                   Explore Marketplace
                 </Button>
               </div>
@@ -252,11 +263,20 @@ const Index = () => {
                 Fylaro's advanced invoice financing platform to unlock global financial opportunities.
               </p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                <Button size="lg" className="text-lg px-8 py-4 glow h-auto">
+                <Button 
+                  size="lg" 
+                  className="text-lg px-8 py-4 glow h-auto"
+                  onClick={() => navigate('/upload')}
+                >
                   <Banknote className="mr-3 h-6 w-6" />
                   Start as Business
                 </Button>
-                <Button size="lg" variant="outline" className="text-lg px-8 py-4 h-auto border-primary/30 text-foreground hover:bg-primary/10">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="text-lg px-8 py-4 h-auto border-primary/30 text-foreground hover:bg-primary/10"
+                  onClick={() => navigate('/marketplace')}
+                >
                   <Award className="mr-3 h-6 w-6" />
                   Become an Investor
                 </Button>
@@ -281,7 +301,10 @@ const Index = () => {
                 The world's most advanced invoice financing platform, powered by Finternet technology 
                 and trusted by industry leaders globally.
               </p>
-              <Button className="glow">
+              <Button 
+                className="glow"
+                onClick={() => navigate('/dashboard')}
+              >
                 Get Started Today
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
