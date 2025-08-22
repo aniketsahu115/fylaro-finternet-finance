@@ -1,10 +1,10 @@
 # Fylaro - Invoice Financing on the Finternet
 
-## 🌟 Overview
+##  Overview
 
 Fylaro is a revolutionary invoice financing marketplace built on the principles of the Finternet, leveraging tokenization and the Unified Ledger to connect businesses seeking working capital with global investors.
 
-## 🎯 Core Features
+##  Core Features
 
 ### For Businesses
 - **Invoice Tokenization**: Transform invoices into cryptographically verified NFTs
@@ -20,7 +20,7 @@ Fylaro is a revolutionary invoice financing marketplace built on the principles 
 - **Automated Settlement**: Seamless payment processing
 - **Real-time Analytics**: Track performance and returns
 
-## 🏗️ Project Structure
+##  Project Structure
 
 ```
 fylaro/
@@ -33,21 +33,21 @@ fylaro/
 └── docs/               # Documentation
 ```
 
-## 🚀 Getting Started
+##  Getting Started
 
 1. **Install dependencies**: `npm install`
 2. **Start frontend**: `npm run dev`
 3. **Start backend**: `cd backend && npm run dev`
 4. **Deploy contracts**: See contracts/ directory
 
-## 🎨 Design System
+##  Design System
 
 - **Dark Theme**: Binance-inspired professional aesthetic
 - **Golden Accents**: Primary color (#F0B90B) for highlights
 - **Responsive Grid**: Mobile-first, adaptive layouts
 - **Semantic Tokens**: Consistent design system
 
-## 🔗 Finternet Integration
+##  Finternet Integration
 
 - **Unified Ledger**: Cross-border asset transfer
 - **Tokenization**: Invoices as tradeable digital assets
