@@ -1,73 +1,59 @@
-# Welcome to your Lovable project
+# Fylaro - Invoice Financing on the Finternet
 
-## Project info
+## 🌟 Overview
 
-**URL**: https://lovable.dev/projects/b2e55847-b020-4d2c-9cc8-9e597e20a7aa
+Fylaro is a revolutionary invoice financing marketplace built on the principles of the Finternet, leveraging tokenization and the Unified Ledger to connect businesses seeking working capital with global investors.
 
-## How can I edit this code?
+## 🎯 Core Features
 
-There are several ways of editing your application.
+### For Businesses
+- **Invoice Tokenization**: Transform invoices into cryptographically verified NFTs
+- **Automated KYC & Fraud Detection**: Robust verification system
+- **Fair Credit Scoring**: Transparent rating based on verifiable data
+- **Real-time Payment Tracking**: Monitor settlement status
+- **Global Investor Access**: Connect with investors worldwide
 
-**Use Lovable**
+### For Investors
+- **Diversified Portfolio**: Invest in verified invoice assets
+- **Risk Assessment Tools**: Comprehensive analytics and scoring
+- **Secondary Trading**: Trade invoice tokens for liquidity
+- **Automated Settlement**: Seamless payment processing
+- **Real-time Analytics**: Track performance and returns
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b2e55847-b020-4d2c-9cc8-9e597e20a7aa) and start prompting.
+## 🏗️ Project Structure
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+fylaro/
+├── src/                 # Frontend React application
+│   ├── components/      # UI components
+│   ├── pages/          # Application pages
+│   └── lib/            # Utilities
+├── contracts/          # Smart contracts
+├── backend/            # Node.js API
+└── docs/               # Documentation
 ```
 
-**Edit a file directly in GitHub**
+## 🚀 Getting Started
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+1. **Install dependencies**: `npm install`
+2. **Start frontend**: `npm run dev`
+3. **Start backend**: `cd backend && npm run dev`
+4. **Deploy contracts**: See contracts/ directory
 
-**Use GitHub Codespaces**
+## 🎨 Design System
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- **Dark Theme**: Binance-inspired professional aesthetic
+- **Golden Accents**: Primary color (#F0B90B) for highlights
+- **Responsive Grid**: Mobile-first, adaptive layouts
+- **Semantic Tokens**: Consistent design system
 
-## What technologies are used for this project?
+## 🔗 Finternet Integration
 
-This project is built with:
+- **Unified Ledger**: Cross-border asset transfer
+- **Tokenization**: Invoices as tradeable digital assets
+- **Automated Settlement**: Smart contract-based payments
+- **Global Access**: Single sign-on for all services
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/b2e55847-b020-4d2c-9cc8-9e597e20a7aa) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+*Built with ❤️ for the future of global finance*

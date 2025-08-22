@@ -1,0 +1,45 @@
+{
+  "name": "fylaro-backend",
+  "version": "1.0.0",
+  "description": "Fylaro Invoice Financing Backend API",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/",
+    "migrate": "node scripts/migrate.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "express-rate-limit": "^6.8.1",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "express-validator": "^7.0.1",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.11.1",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.6.2",
+    "axios": "^1.4.0",
+    "uuid": "^9.0.0",
+    "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "jest": "^29.6.1",
+    "eslint": "^8.44.0",
+    "supertest": "^6.3.3"
+  },
+  "keywords": [
+    "invoice",
+    "financing",
+    "blockchain",
+    "finternet",
+    "defi"
+  ],
+  "author": "Fylaro Team",
+  "license": "MIT"
+}
