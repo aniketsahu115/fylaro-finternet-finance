@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import OrderBook from "@/components/features/OrderBook";
 import {
   TrendingUp,
   TrendingDown,
@@ -185,75 +186,10 @@ const Trading = () => {
 
         {/* Trading Interface */}
         <div className="grid gap-6 lg:grid-cols-3">
-          {/* Market Data */}
-          <Card className="lg:col-span-2 gradient-card border-border">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center">
-                  <BarChart3 className="h-5 w-5 mr-2" />
-                  Market Data
-                </CardTitle>
-                <div className="flex items-center space-x-2">
-                  <Input placeholder="Search..." className="w-40" />
-                  <Select>
-                    <SelectTrigger className="w-32">
-                      <SelectValue placeholder="Sort" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="price">Price</SelectItem>
-                      <SelectItem value="change">Change</SelectItem>
-                      <SelectItem value="volume">Volume</SelectItem>
-                      <SelectItem value="yield">Yield</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {/* Header */}
-                <div className="grid grid-cols-7 gap-4 text-xs font-medium text-muted-foreground pb-2 border-b border-border">
-                  <div>Token</div>
-                  <div>Last Price</div>
-                  <div>Change</div>
-                  <div>Volume</div>
-                  <div>Bid</div>
-                  <div>Ask</div>
-                  <div>Yield</div>
-                </div>
-                
-                {/* Market Rows */}
-                {marketData.map((token) => (
-                  <div 
-                    key={token.id}
-                    className="grid grid-cols-7 gap-4 py-3 hover:bg-muted/20 rounded cursor-pointer transition-smooth"
-                  >
-                    <div>
-                      <div className="font-medium">{token.id}</div>
-                      <div className="text-xs text-muted-foreground truncate">
-                        {token.company}
-                      </div>
-                    </div>
-                    <div className="font-mono">${formatPrice(token.lastPrice)}</div>
-                    <div className={`flex items-center ${token.change >= 0 ? 'text-success' : 'text-destructive'}`}>
-                      {token.change >= 0 ? (
-                        <TrendingUp className="h-3 w-3 mr-1" />
-                      ) : (
-                        <TrendingDown className="h-3 w-3 mr-1" />
-                      )}
-                      <span className="text-xs">
-                        {token.changePercent >= 0 ? '+' : ''}{token.changePercent.toFixed(1)}%
-                      </span>
-                    </div>
-                    <div className="text-sm">{formatAmount(token.volume)}</div>
-                    <div className="font-mono text-sm">${formatPrice(token.bid)}</div>
-                    <div className="font-mono text-sm">${formatPrice(token.ask)}</div>
-                    <div className="text-sm text-success">{token.yield.toFixed(1)}%</div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          {/* Order Book Component */}
+          <div className="lg:col-span-2">
+            <OrderBook invoiceId="trading-overview" />
+          </div>
 
           {/* Trading Panel */}
           <Card className="gradient-card border-border">

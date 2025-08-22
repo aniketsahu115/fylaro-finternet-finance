@@ -10,9 +10,11 @@ import {
   Settings,
   HelpCircle,
   BarChart3,
-  Users
+  Users,
+  Upload
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { NavLink } from "react-router-dom";
 import { useState } from "react";
 
 interface SidebarProps {
@@ -24,50 +26,37 @@ const navigation = [
     name: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
-    current: true,
   },
   {
     name: "Marketplace",
     href: "/marketplace",
     icon: ShoppingCart,
-    current: false,
   },
   {
-    name: "My Invoices",
-    href: "/invoices",
-    icon: FileText,
-    current: false,
-    badge: "3",
+    name: "Upload Invoice",
+    href: "/upload",
+    icon: Upload,
   },
   {
     name: "Portfolio",
     href: "/portfolio",
     icon: Briefcase,
-    current: false,
   },
   {
     name: "Trading",
     href: "/trading",
     icon: TrendingUp,
-    current: false,
   },
   {
     name: "Payments",
     href: "/payments",
     icon: CreditCard,
-    current: false,
+    badge: "3",
   },
   {
     name: "Analytics",
     href: "/analytics",
     icon: BarChart3,
-    current: false,
-  },
-  {
-    name: "Investors",
-    href: "/investors",
-    icon: Users,
-    current: false,
   },
 ];
 
@@ -97,29 +86,30 @@ const Sidebar = ({ className }: SidebarProps) => {
       <nav className="flex-1 p-4">
         <div className="space-y-2">
           {navigation.map((item) => (
-            <Button
+            <NavLink
               key={item.name}
-              variant={item.current ? "default" : "ghost"}
-              className={cn(
-                "w-full justify-start",
-                item.current && "glow"
-              )}
-              asChild
+              to={item.href}
+              className={({ isActive }) =>
+                cn(
+                  "w-full justify-start flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all",
+                  isActive 
+                    ? "bg-primary text-primary-foreground glow" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                )
+              }
             >
-              <a href={item.href} className="flex items-center">
-                <item.icon className="h-5 w-5 mr-3" />
-                {!collapsed && (
-                  <>
-                    <span className="flex-1 text-left">{item.name}</span>
-                    {item.badge && (
-                      <Badge variant="secondary" className="ml-auto">
-                        {item.badge}
-                      </Badge>
-                    )}
-                  </>
-                )}
-              </a>
-            </Button>
+              <item.icon className="h-5 w-5 mr-3" />
+              {!collapsed && (
+                <>
+                  <span className="flex-1 text-left">{item.name}</span>
+                  {item.badge && (
+                    <Badge variant="secondary" className="ml-auto">
+                      {item.badge}
+                    </Badge>
+                  )}
+                </>
+              )}
+            </NavLink>
           ))}
         </div>
       </nav>
@@ -127,18 +117,34 @@ const Sidebar = ({ className }: SidebarProps) => {
       {/* Footer */}
       <div className="p-4 border-t border-border">
         <div className="space-y-2">
-          <Button variant="ghost" className="w-full justify-start" asChild>
-            <a href="/settings">
-              <Settings className="h-5 w-5 mr-3" />
-              {!collapsed && "Settings"}
-            </a>
-          </Button>
-          <Button variant="ghost" className="w-full justify-start" asChild>
-            <a href="/help">
-              <HelpCircle className="h-5 w-5 mr-3" />
-              {!collapsed && "Help"}
-            </a>
-          </Button>
+          <NavLink 
+            to="/settings"
+            className={({ isActive }) =>
+              cn(
+                "w-full justify-start flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all",
+                isActive 
+                  ? "bg-primary text-primary-foreground" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+              )
+            }
+          >
+            <Settings className="h-5 w-5 mr-3" />
+            {!collapsed && "Settings"}
+          </NavLink>
+          <NavLink 
+            to="/help"
+            className={({ isActive }) =>
+              cn(
+                "w-full justify-start flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all",
+                isActive 
+                  ? "bg-primary text-primary-foreground" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+              )
+            }
+          >
+            <HelpCircle className="h-5 w-5 mr-3" />
+            {!collapsed && "Help"}
+          </NavLink>
         </div>
       </div>
     </div>

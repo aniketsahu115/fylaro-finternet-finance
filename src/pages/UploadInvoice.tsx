@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import DocumentUpload from "@/components/features/DocumentUpload";
 import { useState } from "react";
 import {
   Upload,
@@ -83,43 +84,12 @@ const UploadInvoice = () => {
         </p>
       </div>
 
-      <Card className="gradient-card border-border">
-        <CardContent className="pt-6">
-          <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-            <input
-              type="file"
-              id="invoice-file"
-              className="hidden"
-              accept=".pdf,.jpg,.jpeg,.png"
-              onChange={handleFileUpload}
-            />
-            <label htmlFor="invoice-file" className="cursor-pointer">
-              <FileText className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-              <p className="text-lg font-medium mb-2">
-                Drop your invoice here or click to browse
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Supports PDF, JPG, PNG (Max 10MB)
-              </p>
-            </label>
-          </div>
-          
-          {uploadProgress > 0 && (
-            <div className="mt-4">
-              <div className="flex justify-between text-sm mb-2">
-                <span>Uploading...</span>
-                <span>{uploadProgress}%</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div 
-                  className="bg-primary h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${uploadProgress}%` }}
-                />
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <DocumentUpload 
+        onUploadComplete={(file) => {
+          setFormData(prev => ({ ...prev, file }));
+          setUploadStep(2);
+        }}
+      />
     </div>
   );
 

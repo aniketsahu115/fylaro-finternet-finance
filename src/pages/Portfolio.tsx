@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import CreditScoring from "@/components/features/CreditScoring";
 import {
   TrendingUp,
   TrendingDown,
@@ -235,6 +236,9 @@ const Portfolio = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Credit Scoring Integration */}
+        <CreditScoring />
 
         {/* Investment Tabs */}
         <Tabs defaultValue="active" className="space-y-4">

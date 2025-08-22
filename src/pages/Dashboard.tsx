@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import CreditScoring from "@/components/features/CreditScoring";
 import {
   DollarSign,
   TrendingUp,
@@ -193,40 +194,8 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Credit Score */}
-        <Card className="glass-card hover:highlight-border transition-smooth">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Credit Score & Rating</CardTitle>
-              <Badge className="bg-success/10 text-success border-success/30">Excellent</Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-6">
-              <div className="flex-1">
-                <div className="flex items-baseline space-x-2 mb-2">
-                  <span className="text-4xl font-bold text-gradient">847</span>
-                  <span className="text-muted-foreground">/1000</span>
-                </div>
-                <Progress value={84.7} className="mb-4" />
-                <div className="grid grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <p className="text-muted-foreground">Payment History</p>
-                    <p className="font-semibold text-success">Excellent</p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Credit Utilization</p>
-                    <p className="font-semibold text-success">Low</p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Invoice Volume</p>
-                    <p className="font-semibold text-primary">High</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Credit Score Component */}
+        <CreditScoring showDetails={false} />
       </div>
     </DashboardLayout>
   );

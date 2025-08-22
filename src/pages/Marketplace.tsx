@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import InvestmentAnalysis from "@/components/features/InvestmentAnalysis";
 import {
   Search,
   Filter,
@@ -263,6 +264,12 @@ const Marketplace = () => {
             </Card>
           ))}
         </div>
+
+        {/* Investment Analysis */}
+        <InvestmentAnalysis 
+          invoiceId="marketplace-overview" 
+          companyName="Market Analysis" 
+        />
 
         {/* Load More */}
         <div className="text-center pt-6">
