@@ -87,9 +87,11 @@ const UploadInvoice = () => {
       </div>
 
       <DocumentUpload 
-        onUploadComplete={(file) => {
-          setFormData(prev => ({ ...prev, file }));
-          setUploadStep(2);
+        onUploadComplete={(files) => {
+          if (files.length > 0) {
+            setFormData(prev => ({ ...prev, file: files[0] }));
+            setUploadStep(2);
+          }
         }}
       />
     </div>

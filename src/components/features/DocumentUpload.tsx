@@ -39,6 +39,7 @@ const DocumentUpload = ({ onUploadComplete }: DocumentUploadProps) => {
   const [dragOver, setDragOver] = useState(false);
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [uploadMode, setUploadMode] = useState<'single' | 'batch'>('single');
+  const [uploadError, setUploadError] = useState<string>('');
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -58,12 +59,47 @@ const DocumentUpload = ({ onUploadComplete }: DocumentUploadProps) => {
   }, []);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('File input clicked'); // Debug log
     const selectedFiles = Array.from(e.target.files || []);
-    processFiles(selectedFiles);
+    console.log('Selected files:', selectedFiles); // Debug log
+    if (selectedFiles.length > 0) {
+      processFiles(selectedFiles);
+    }
   };
 
   const processFiles = (fileList: File[]) => {
-    const newFiles: UploadedFile[] = fileList.map(file => ({
+    console.log('Processing files:', fileList); // Debug log
+    setUploadError(''); // Clear any previous errors
+    
+    // Validate file types and sizes
+    const validFiles = fileList.filter(file => {
+      const validTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      
+      if (!validTypes.includes(file.type)) {
+        console.warn(`Invalid file type: ${file.type}`);
+        setUploadError(`Invalid file type: ${file.name}. Please upload PDF, PNG, JPG, or JPEG files only.`);
+        return false;
+      }
+      
+      if (file.size > maxSize) {
+        console.warn(`File too large: ${file.size}`);
+        setUploadError(`File too large: ${file.name}. Maximum size is 10MB.`);
+        return false;
+      }
+      
+      return true;
+    });
+
+    if (validFiles.length === 0) {
+      console.warn('No valid files to process');
+      if (!uploadError) {
+        setUploadError('No valid files selected. Please choose PDF, PNG, JPG, or JPEG files under 10MB.');
+      }
+      return;
+    }
+
+    const newFiles: UploadedFile[] = validFiles.map(file => ({
       id: Math.random().toString(36).substr(2, 9),
       name: file.name,
       size: file.size,
@@ -72,6 +108,7 @@ const DocumentUpload = ({ onUploadComplete }: DocumentUploadProps) => {
       progress: 0
     }));
 
+    console.log('Adding new files:', newFiles); // Debug log
     setFiles(prev => [...prev, ...newFiles]);
 
     // Simulate upload and processing
@@ -224,7 +261,13 @@ const DocumentUpload = ({ onUploadComplete }: DocumentUploadProps) => {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-2 justify-center">
                   <Label htmlFor="file-upload">
-                    <Button className="glow cursor-pointer">
+                    <Button 
+                      className="glow cursor-pointer"
+                      onClick={() => {
+                        console.log('Choose Files button clicked'); // Debug log
+                        document.getElementById('file-upload')?.click();
+                      }}
+                    >
                       <FileText className="h-4 w-4 mr-2" />
                       Choose Files
                     </Button>
@@ -237,7 +280,13 @@ const DocumentUpload = ({ onUploadComplete }: DocumentUploadProps) => {
                     onChange={handleFileSelect}
                     className="hidden"
                   />
-                  <Button variant="outline">
+                  <Button 
+                    variant="outline"
+                    onClick={() => {
+                      console.log('Scan Document button clicked'); // Debug log
+                      // Placeholder for document scanning functionality
+                    }}
+                  >
                     <Scan className="h-4 w-4 mr-2" />
                     Scan Document
                   </Button>
@@ -245,6 +294,17 @@ const DocumentUpload = ({ onUploadComplete }: DocumentUploadProps) => {
               </div>
             </div>
           </div>
+
+          {/* Error Message */}
+          {uploadError && (
+            <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+              <div className="flex items-center space-x-2">
+                <AlertTriangle className="h-4 w-4 text-destructive" />
+                <span className="text-sm font-medium text-destructive">Upload Error</span>
+              </div>
+              <p className="text-xs text-destructive mt-1">{uploadError}</p>
+            </div>
+          )}
 
           {/* Security Notice */}
           <div className="mt-4 p-3 bg-primary/5 border border-primary/20 rounded-lg">
@@ -341,11 +401,27 @@ const DocumentUpload = ({ onUploadComplete }: DocumentUploadProps) => {
 
                   {file.status === 'verified' && (
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          console.log('Preview clicked for file:', file.name);
+                          // Placeholder for preview functionality
+                          alert(`Preview functionality for ${file.name} - Feature coming soon!`);
+                        }}
+                      >
                         <Eye className="h-3 w-3 mr-1" />
                         Preview
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          console.log('Download clicked for file:', file.name);
+                          // Placeholder for download functionality
+                          alert(`Download functionality for ${file.name} - Feature coming soon!`);
+                        }}
+                      >
                         <Download className="h-3 w-3 mr-1" />
                         Download
                       </Button>
@@ -359,9 +435,13 @@ const DocumentUpload = ({ onUploadComplete }: DocumentUploadProps) => {
               <div className="flex justify-end pt-4 border-t border-border">
                 <Button 
                   className="glow"
-                  onClick={() => onUploadComplete?.(files.filter(f => f.status === 'verified'))}
+                  onClick={() => {
+                    const verifiedFiles = files.filter(f => f.status === 'verified');
+                    console.log('Continuing with verification for files:', verifiedFiles);
+                    onUploadComplete?.(verifiedFiles);
+                  }}
                 >
-                  Continue with Verification
+                  Continue with Verification ({files.filter(f => f.status === 'verified').length} files)
                 </Button>
               </div>
             )}
