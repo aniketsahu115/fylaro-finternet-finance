@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/layout/Navbar";
+import DigitalVaultAnimation from "@/components/animations/DigitalVaultAnimation";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
@@ -124,34 +125,37 @@ const Index = () => {
       </section>
 
       {/* Market Overview */}
-      <section className="py-20 border-y border-border/50">
-        <div className="container mx-auto px-6">
+      <section className="py-20 border-y border-border/50 relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+        <div className="absolute inset-0">
+          <DigitalVaultAnimation />
+        </div>
+        <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">Live Market Overview</h2>
-            <p className="text-xl text-muted-foreground">Real-time performance across industry sectors</p>
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-white">Live Market Overview</h2>
+            <p className="text-xl text-blue-200">Real-time performance across industry sectors</p>
           </div>
           
-          <Card className="glass-card max-w-4xl mx-auto">
+          <Card className="glass-card max-w-4xl mx-auto bg-white/10 backdrop-blur-md border-white/20">
             <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <BarChart3 className="h-6 w-6 text-primary" />
+              <CardTitle className="flex items-center gap-3 text-white">
+                <BarChart3 className="h-6 w-6 text-yellow-400" />
                 Top Performing Sectors
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {marketData.map((sector, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-secondary/50 hover:bg-secondary transition-smooth">
+                  <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-white/10 hover:bg-white/20 transition-smooth backdrop-blur-sm border border-white/10">
                     <div className="flex items-center gap-4">
-                      <div className="w-2 h-2 rounded-full bg-primary"></div>
-                      <span className="font-semibold">{sector.name}</span>
+                      <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
+                      <span className="font-semibold text-white">{sector.name}</span>
                     </div>
                     <div className="flex items-center gap-6 text-sm">
                       <div className="text-right">
-                        <div className="text-foreground">APY: <span className="text-primary font-bold">{sector.apy}</span></div>
-                        <div className="text-muted-foreground">Volume: {sector.volume}</div>
+                        <div className="text-blue-100">APY: <span className="text-yellow-400 font-bold">{sector.apy}</span></div>
+                        <div className="text-blue-200">Volume: {sector.volume}</div>
                       </div>
-                      <TrendingUp className={`h-4 w-4 ${sector.trend === 'up' ? 'text-success' : 'text-chart-red'}`} />
+                      <TrendingUp className={`h-4 w-4 ${sector.trend === 'up' ? 'text-green-400' : 'text-red-400'}`} />
                     </div>
                   </div>
                 ))}
