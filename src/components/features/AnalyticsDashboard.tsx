@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "@/components/ui/use-toast";
 import {
   BarChart3,
   TrendingUp,
@@ -23,6 +24,148 @@ import {
 const AnalyticsDashboard = () => {
   const [timeframe, setTimeframe] = useState('30d');
   const [category, setCategory] = useState('overview');
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState<any>(null);
+
+  // Function to fetch analytics data
+  const fetchAnalyticsData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      // In a real app, this would be an API call
+      // Example: const response = await fetch(`/api/analytics?timeframe=${timeframe}`);
+      
+      // Simulate API call with a timeout
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // For now, we'll just refresh the UI
+      toast({
+        title: "Data refreshed",
+        description: `Analytics data updated for ${timeframe} timeframe`,
+      });
+      
+      // In a real implementation, we would set the data from the API response
+      // setData(await response.json());
+    } catch (error) {
+      console.error("Error fetching analytics data:", error);
+      toast({
+        title: "Refresh failed",
+        description: "There was an error refreshing the analytics data",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [timeframe]);
+
+  // Function to convert object array to CSV
+  const convertToCSV = (objArray: any[]) => {
+    if (objArray.length === 0) return '';
+    
+    // Get headers from first object
+    const headers = Object.keys(objArray[0]);
+    
+    // Create CSV header row
+    const csvRows = [headers.join(',')];
+    
+    // Add data rows
+    objArray.forEach(item => {
+      const values = headers.map(header => {
+        const value = item[header];
+        // Handle strings that may contain commas
+        return typeof value === 'string' ? `"${value.replace(/"/g, '""')}"` : value;
+      });
+      csvRows.push(values.join(','));
+    });
+    
+    return csvRows.join('\n');
+  };
+
+  // Function to export analytics data
+  const exportAnalyticsData = useCallback(() => {
+    try {
+      // Format data for export
+      const formattedStats = overviewStats.map(stat => ({
+        Metric: stat.title,
+        Value: stat.value,
+        Change: stat.change,
+        Description: stat.description
+      }));
+
+      const formattedPerformance = performanceMetrics.map(metric => ({
+        Category: metric.category,
+        Current: metric.current,
+        Previous: metric.previous,
+        Change: metric.change
+      }));
+      
+      const formattedGeographic = geographicData.map(item => ({
+        Region: item.region,
+        Percentage: `${item.percentage}%`,
+        Volume: item.volume
+      }));
+      
+      // Create CSV content
+      const csvContent = [
+        "# Fylaro Finance Analytics Report",
+        `# Generated: ${new Date().toLocaleString()}`,
+        `# Timeframe: ${timeframe}`,
+        "",
+        "## Overview Statistics",
+        convertToCSV(formattedStats),
+        "",
+        "## Performance Metrics",
+        convertToCSV(formattedPerformance),
+        "",
+        "## Geographic Distribution",
+        convertToCSV(formattedGeographic)
+      ].join('\n');
+      
+      // Create a blob and download link for CSV
+      const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const csvUrl = URL.createObjectURL(csvBlob);
+      const csvLink = document.createElement('a');
+      csvLink.download = `fylaro-analytics-${timeframe}-${new Date().toISOString().split('T')[0]}.csv`;
+      csvLink.href = csvUrl;
+      csvLink.style.display = 'none';
+      document.body.appendChild(csvLink);
+      csvLink.click();
+      document.body.removeChild(csvLink);
+      
+      // Also create JSON export
+      const exportData = {
+        timeframe,
+        overviewStats,
+        performanceMetrics,
+        geographicData,
+        industryBreakdown,
+        exportDate: new Date().toISOString()
+      };
+      
+      // Convert to JSON string
+      const jsonData = JSON.stringify(exportData, null, 2);
+      const jsonBlob = new Blob([jsonData], { type: 'application/json' });
+      const jsonUrl = URL.createObjectURL(jsonBlob);
+      const jsonLink = document.createElement('a');
+      jsonLink.download = `fylaro-analytics-${timeframe}-${new Date().toISOString().split('T')[0]}.json`;
+      jsonLink.href = jsonUrl;
+      jsonLink.style.display = 'none';
+      document.body.appendChild(jsonLink);
+      jsonLink.click();
+      document.body.removeChild(jsonLink);
+      
+      toast({
+        title: "Export successful",
+        description: "Analytics data has been exported as CSV and JSON",
+      });
+    } catch (error) {
+      console.error("Error exporting data:", error);
+      toast({
+        title: "Export failed",
+        description: "There was an error exporting the analytics data",
+        variant: "destructive",
+      });
+    }
+  }, [timeframe, overviewStats, performanceMetrics, geographicData, industryBreakdown]);
 
   const overviewStats = [
     {
@@ -173,11 +316,19 @@ const AnalyticsDashboard = () => {
               <SelectItem value="1y">1 Year</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
+          <Button 
+            variant="outline" 
+            onClick={fetchAnalyticsData}
+            disabled={isLoading}
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+            {isLoading ? 'Refreshing...' : 'Refresh'}
           </Button>
-          <Button className="glow">
+          <Button 
+            className="glow" 
+            onClick={exportAnalyticsData}
+            disabled={isLoading}
+          >
             <Download className="h-4 w-4 mr-2" />
             Export
           </Button>
