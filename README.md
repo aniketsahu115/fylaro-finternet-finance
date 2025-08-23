@@ -4,6 +4,8 @@
 
 Fylaro is a revolutionary invoice financing marketplace built on the principles of the Finternet, leveraging tokenization and the Unified Ledger to connect businesses seeking working capital with global investors.
 
+![Finternet Architecture]()
+
 ##  Core Features
 
 ### For Businesses
