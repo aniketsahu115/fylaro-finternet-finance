@@ -2,6 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/layout/Navbar";
+import BinanceBlockchainAnimation from "@/components/animations/BinanceBlockchainAnimation";
+import GlobalMapAnimation from "@/components/animations/GlobalMapAnimation";
+import ScrollTriggeredFintechIcons from "@/components/animations/ScrollTriggeredFintechIcons";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
@@ -63,20 +66,32 @@ const Index = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden gradient-hero">
-        <div className="absolute inset-0 professional-grid opacity-10"></div>
-        <div className="relative container mx-auto px-6 py-20 lg:py-32">
+      <section className="relative overflow-hidden gradient-hero min-h-[90vh] flex items-center">
+        {/* Blockchain Animation Background */}
+        <div className="absolute inset-0 z-0">
+          <BinanceBlockchainAnimation />
+        </div>
+        
+        {/* Gradient Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background/80 z-10"></div>
+        
+        {/* Traditional grid background (subtle) */}
+        <div className="absolute inset-0 professional-grid opacity-5 z-20"></div>
+        
+        <div className="relative container mx-auto px-6 py-20 lg:py-32 z-30">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <Badge className="mb-8 text-sm px-4 py-2 glow bg-primary/10 text-primary border-primary/30">
+              <Badge className="mb-8 text-sm px-4 py-2 glow bg-primary/10 text-primary border-primary/30 backdrop-blur-sm">
                 Powered by Finternet Technology
               </Badge>
-              <h1 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight">
+              <h1 className="text-5xl lg:text-7xl font-bold mb-8 leading-tight text-white drop-shadow-2xl">
                 Next-Generation{" "}
-                <span className="text-gradient">Invoice Financing</span>{" "}
+                <span className="text-gradient bg-gradient-to-r from-yellow-400 via-blue-400 to-green-400 bg-clip-text text-transparent">
+                  Invoice Financing
+                </span>{" "}
                 Platform
               </h1>
-              <p className="text-xl lg:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed">
+              <p className="text-xl lg:text-2xl text-gray-200 mb-12 max-w-4xl mx-auto leading-relaxed drop-shadow-lg">
                 Transform your receivables into instant liquidity through our advanced 
                 tokenization platform. Connect with global investors and unlock working capital 
                 with unprecedented speed and transparency.
@@ -84,7 +99,7 @@ const Index = () => {
               <div className="flex flex-col sm:flex-row gap-6 justify-center">
                 <Button 
                   size="lg" 
-                  className="text-lg px-8 py-4 glow h-auto"
+                  className="text-lg px-8 py-4 glow h-auto backdrop-blur-sm bg-primary/90 hover:bg-primary shadow-2xl"
                   onClick={() => navigate('/trading')}
                 >
                   Start Trading Invoices
@@ -93,7 +108,7 @@ const Index = () => {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="text-lg px-8 py-4 h-auto border-primary/30 text-foreground hover:bg-primary/10"
+                  className="text-lg px-8 py-4 h-auto border-primary/30 text-white hover:bg-primary/10 backdrop-blur-sm shadow-xl"
                   onClick={() => navigate('/marketplace')}
                 >
                   Explore Marketplace
@@ -104,9 +119,9 @@ const Index = () => {
             {/* Live Stats Dashboard */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
               {stats.map((stat, index) => (
-                <Card key={index} className="glass-card hover:highlight-border transition-smooth">
+                <Card key={index} className="glass-card hover:highlight-border transition-smooth backdrop-blur-md bg-card/80 border-white/10">
                   <CardContent className="p-6 text-center">
-                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl gradient-primary mb-4">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl gradient-primary mb-4 shadow-lg">
                       <stat.icon className="h-7 w-7 text-primary-foreground" />
                     </div>
                     <div className="text-3xl lg:text-4xl font-bold mb-2 text-foreground">{stat.value}</div>
@@ -197,6 +212,189 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Blockchain Technology Showcase */}
+      <section className="py-20 bg-gradient-to-br from-background via-background/95 to-secondary/20 relative overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="w-full h-full opacity-60">
+            <BinanceBlockchainAnimation />
+          </div>
+        </div>
+        
+        <div className="relative z-10 container mx-auto px-6">
+          <div className="text-center mb-16">
+            <Badge className="mb-6 text-sm px-4 py-2 bg-yellow-500/10 text-yellow-400 border-yellow-500/30 backdrop-blur-sm">
+              Binance Smart Chain Powered
+            </Badge>
+            <h2 className="text-3xl lg:text-5xl font-bold mb-6 text-white">
+              Built on Enterprise-Grade
+              <span className="block text-gradient bg-gradient-to-r from-yellow-400 via-blue-400 to-green-400 bg-clip-text text-transparent">
+                Blockchain Infrastructure
+              </span>
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Experience the speed, security, and scalability of Binance Smart Chain 
+              with our advanced cross-chain interoperability powered by Finternet technology.
+            </p>
+          </div>
+          
+          <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <Card className="glass-card hover:highlight-border transition-smooth group backdrop-blur-lg bg-card/20 border-white/10">
+              <CardHeader className="pb-4">
+                <div className="flex items-center space-x-4">
+                  <div className="p-4 rounded-xl bg-yellow-500/20 border border-yellow-500/30 group-hover:scale-110 transition-smooth backdrop-blur-sm">
+                    <Zap className="h-7 w-7 text-yellow-400" />
+                  </div>
+                  <CardTitle className="text-2xl text-white">Lightning Fast</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 text-lg leading-relaxed">
+                  Sub-3 second settlement times with 1M+ transactions per second capacity 
+                  on Binance Smart Chain's optimized infrastructure.
+                </p>
+                <div className="mt-4 flex items-center gap-2 text-sm text-yellow-400/80">
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                  <span>Real-time validation</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glass-card hover:highlight-border transition-smooth group backdrop-blur-lg bg-card/20 border-white/10">
+              <CardHeader className="pb-4">
+                <div className="flex items-center space-x-4">
+                  <div className="p-4 rounded-xl bg-green-500/20 border border-green-500/30 group-hover:scale-110 transition-smooth backdrop-blur-sm">
+                    <Shield className="h-7 w-7 text-green-400" />
+                  </div>
+                  <CardTitle className="text-2xl text-white">Bank-Grade Security</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 text-lg leading-relaxed">
+                  Multi-signature validation, cryptographic proof systems, and 
+                  decentralized consensus ensure institutional-level security.
+                </p>
+                <div className="mt-4 flex items-center gap-2 text-sm text-green-400/80">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span>99.9% uptime guarantee</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glass-card hover:highlight-border transition-smooth group backdrop-blur-lg bg-card/20 border-white/10">
+              <CardHeader className="pb-4">
+                <div className="flex items-center space-x-4">
+                  <div className="p-4 rounded-xl bg-blue-500/20 border border-blue-500/30 group-hover:scale-110 transition-smooth backdrop-blur-sm">
+                    <Globe className="h-7 w-7 text-blue-400" />
+                  </div>
+                  <CardTitle className="text-2xl text-white">Cross-Chain Ready</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-300 text-lg leading-relaxed">
+                  Seamless interoperability across 10+ blockchain networks with 
+                  Finternet's unified ledger technology for global accessibility.
+                </p>
+                <div className="mt-4 flex items-center gap-2 text-sm text-blue-400/80">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                  <span>Multi-chain support</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Technical Specifications */}
+          <div className="mt-16 max-w-4xl mx-auto">
+            <Card className="glass-card backdrop-blur-lg bg-card/10 border-white/10">
+              <CardContent className="p-8">
+                <h3 className="text-2xl font-bold text-center mb-8 text-white">
+                  Technical Specifications
+                </h3>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                  <div className="space-y-2">
+                    <div className="text-3xl font-bold text-yellow-400">3s</div>
+                    <div className="text-sm text-gray-400">Average Settlement</div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-3xl font-bold text-green-400">99.9%</div>
+                    <div className="text-sm text-gray-400">Network Uptime</div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-3xl font-bold text-blue-400">1M+</div>
+                    <div className="text-sm text-gray-400">TPS Capacity</div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-3xl font-bold text-purple-400">10+</div>
+                    <div className="text-sm text-gray-400">Supported Chains</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Global Market Overview */}
+      <section className="py-20 bg-gray-900 relative overflow-hidden">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <Badge className="mb-6 text-sm px-4 py-2 bg-yellow-500/10 text-yellow-400 border-yellow-500/30 backdrop-blur-sm">
+              Live Market Data
+            </Badge>
+            <h2 className="text-3xl lg:text-5xl font-bold mb-6 text-white">
+              Global Market Overview
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Real-time performance across industry sectors with live data flow visualization 
+              showing global network activity and cross-border transactions.
+            </p>
+          </div>
+          
+          <div className="max-w-7xl mx-auto">
+            <div className="relative h-[500px] lg:h-[600px] rounded-2xl overflow-hidden border border-gray-700/50 backdrop-blur-lg">
+              <GlobalMapAnimation />
+            </div>
+          </div>
+
+          {/* Market Performance Cards */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 max-w-6xl mx-auto">
+            {marketData.map((sector, index) => (
+              <Card key={index} className="glass-card hover:highlight-border transition-smooth group backdrop-blur-lg bg-card/20 border-white/10">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg text-white">{sector.name}</CardTitle>
+                    <div className={`flex items-center gap-1 text-sm ${
+                      sector.trend === 'up' ? 'text-green-400' : 'text-red-400'
+                    }`}>
+                      <TrendingUp className={`h-4 w-4 ${sector.trend === 'down' ? 'rotate-180' : ''}`} />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400 text-sm">APY:</span>
+                      <span className="text-yellow-400 font-bold text-lg">{sector.apy}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-400 text-sm">Volume:</span>
+                      <span className="text-white font-medium">{sector.volume}</span>
+                    </div>
+                    <div className="w-full bg-gray-700/50 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full ${
+                          sector.trend === 'up' ? 'bg-green-400' : 'bg-red-400'
+                        }`}
+                        style={{ width: `${Math.random() * 40 + 60}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* How It Works */}
       <section className="py-20 bg-secondary/20">
         <div className="container mx-auto px-6">
@@ -246,6 +444,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Fintech Features Animation */}
+      <ScrollTriggeredFintechIcons />
 
       {/* CTA Section */}
       <section className="py-20">
