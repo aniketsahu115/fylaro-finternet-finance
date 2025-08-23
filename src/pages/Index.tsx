@@ -2,13 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/layout/Navbar";
-<<<<<<< HEAD
 import BinanceBlockchainAnimation from "@/components/animations/BinanceBlockchainAnimation";
 import GlobalMapAnimation from "@/components/animations/GlobalMapAnimation";
 import ScrollTriggeredFintechIcons from "@/components/animations/ScrollTriggeredFintechIcons";
-=======
 import DigitalVaultAnimation from "@/components/animations/DigitalVaultAnimation";
->>>>>>> feature1
 import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
