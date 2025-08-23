@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import DocumentUpload from "@/components/features/DocumentUpload";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Upload,
   FileText,
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 
 const UploadInvoice = () => {
+  const navigate = useNavigate();
   const [uploadStep, setUploadStep] = useState(1);
   const [formData, setFormData] = useState({
     invoiceNumber: "",
@@ -342,10 +344,10 @@ const UploadInvoice = () => {
       </Card>
 
       <div className="flex justify-center space-x-4">
-        <Button variant="outline">
+        <Button variant="outline" onClick={() => setUploadStep(1)}>
           Upload Another Invoice
         </Button>
-        <Button className="glow">
+        <Button className="glow" onClick={() => navigate('/marketplace')}>
           View in Marketplace
         </Button>
       </div>

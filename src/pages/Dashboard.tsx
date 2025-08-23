@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import CreditScoring from "@/components/features/CreditScoring";
+import { useNavigate } from "react-router-dom";
 import {
   DollarSign,
   TrendingUp,
@@ -17,6 +18,7 @@ import {
 } from "lucide-react";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const stats = [
     {
       title: "Total Capital Raised",
@@ -86,7 +88,7 @@ const Dashboard = () => {
               Welcome back! Here's your invoice financing overview.
             </p>
           </div>
-          <Button className="glow">
+          <Button className="glow" onClick={() => navigate('/upload')}>
             <Upload className="h-4 w-4 mr-2" />
             Upload Invoice
           </Button>
@@ -127,7 +129,7 @@ const Dashboard = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Recent Invoices</CardTitle>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" onClick={() => navigate('/marketplace')}>
                   <Eye className="h-4 w-4 mr-2" />
                   View All
                 </Button>
@@ -174,19 +176,19 @@ const Dashboard = () => {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button className="w-full glow">
+              <Button className="w-full glow" onClick={() => navigate('/upload')}>
                 <Upload className="h-4 w-4 mr-2" />
                 Upload New Invoice
               </Button>
-              <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10">
+              <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10" onClick={() => navigate('/marketplace')}>
                 <Eye className="h-4 w-4 mr-2" />
                 Browse Marketplace
               </Button>
-              <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10">
+              <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10" onClick={() => navigate('/analytics')}>
                 <TrendingUp className="h-4 w-4 mr-2" />
                 View Analytics
               </Button>
-              <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10">
+              <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10" onClick={() => navigate('/portfolio')}>
                 <Users className="h-4 w-4 mr-2" />
                 Investor Network
               </Button>

@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import { useNavigate } from "react-router-dom";
 import {
   DollarSign,
   Clock,
@@ -27,6 +28,7 @@ import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 const PaymentTracker = () => {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [payments, setPayments] = useState([
     {
@@ -834,7 +836,7 @@ const PaymentTracker = () => {
                           />
                         </div>
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="sm">
+                          <Button variant="outline" size="sm" onClick={() => {/* Send reminder functionality can be added later */}}>
                             Send Reminder
                           </Button>
                           <Button size="sm">

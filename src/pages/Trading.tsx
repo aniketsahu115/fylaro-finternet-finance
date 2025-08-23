@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import OrderBook from "@/components/features/OrderBook";
+import { useNavigate } from "react-router-dom";
 import {
   TrendingUp,
   TrendingDown,
@@ -20,6 +21,7 @@ import {
 } from "lucide-react";
 
 const Trading = () => {
+  const navigate = useNavigate();
   const tradingStats = [
     {
       title: "Portfolio Value",
@@ -145,11 +147,11 @@ const Trading = () => {
             </p>
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => window.location.reload()}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh
             </Button>
-            <Button className="glow">
+            <Button className="glow" onClick={() => {/* Place order functionality can be added later */}}>
               <ShoppingCart className="h-4 w-4 mr-2" />
               Place Order
             </Button>
@@ -257,7 +259,7 @@ const Trading = () => {
                     </div>
                   </div>
                   
-                  <Button className="w-full glow">
+                  <Button className="w-full glow" onClick={() => {/* Buy order functionality can be added later */}}>
                     Place Buy Order
                   </Button>
                 </TabsContent>
@@ -325,10 +327,10 @@ const Trading = () => {
                     </div>
                   </div>
                   <div className="flex space-x-1">
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => navigate('/investment-details')}>
                       <Eye className="h-3 w-3" />
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => {/* Sell functionality can be added later */}}>
                       Sell
                     </Button>
                   </div>

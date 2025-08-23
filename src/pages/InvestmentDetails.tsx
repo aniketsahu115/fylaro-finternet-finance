@@ -197,11 +197,12 @@ const InvestmentDetails = () => {
                 <Button 
                   className="w-full glow" 
                   disabled={!investmentAmount || parseFloat(investmentAmount) < invoiceData.minInvestment}
+                  onClick={() => {/* Investment functionality can be added later */}}
                 >
                   Invest Now
                 </Button>
 
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full" onClick={() => {/* Document viewing functionality can be added later */}}>
                   <FileText className="h-4 w-4 mr-2" />
                   View Documents
                 </Button>

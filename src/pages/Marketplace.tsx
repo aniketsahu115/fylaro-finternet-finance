@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Progress } from "@/components/ui/progress";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import InvestmentAnalysis from "@/components/features/InvestmentAnalysis";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   Filter,
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 
 const Marketplace = () => {
+  const navigate = useNavigate();
   const invoiceListings = [
     {
       id: "INV-001",
@@ -160,7 +162,7 @@ const Marketplace = () => {
                   <SelectItem value="time-asc">Time Remaining</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" className="border-primary/30 hover:bg-primary/10">
+              <Button variant="outline" className="border-primary/30 hover:bg-primary/10" onClick={() => {/* Filter functionality can be added later */}}>
                 <Filter className="h-4 w-4 mr-2" />
                 Filters
               </Button>
@@ -252,11 +254,11 @@ const Marketplace = () => {
 
                 {/* Action Buttons */}
                 <div className="flex space-x-2 pt-2">
-                  <Button className="flex-1 glow group-hover:scale-105 transition-smooth">
+                  <Button className="flex-1 glow group-hover:scale-105 transition-smooth" onClick={() => navigate('/investment-details')}>
                     <Target className="h-4 w-4 mr-2" />
                     Invest Now
                   </Button>
-                  <Button variant="outline" className="flex-1 border-primary/30 hover:bg-primary/10">
+                  <Button variant="outline" className="flex-1 border-primary/30 hover:bg-primary/10" onClick={() => navigate('/investment-details')}>
                     View Details
                   </Button>
                 </div>
@@ -273,7 +275,7 @@ const Marketplace = () => {
 
         {/* Load More */}
         <div className="text-center pt-6">
-          <Button variant="outline" size="lg">
+          <Button variant="outline" size="lg" onClick={() => {/* Load more functionality can be added later */}}>
             Load More Listings
           </Button>
         </div>

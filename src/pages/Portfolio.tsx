@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import CreditScoring from "@/components/features/CreditScoring";
+import { useNavigate } from "react-router-dom";
 import {
   TrendingUp,
   TrendingDown,
@@ -19,6 +20,7 @@ import {
 } from "lucide-react";
 
 const Portfolio = () => {
+  const navigate = useNavigate();
   const portfolioStats = [
     {
       title: "Total Invested",
@@ -136,11 +138,11 @@ const Portfolio = () => {
             </p>
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="outline">
+            <Button variant="outline" onClick={() => {/* Export functionality can be added later */}}>
               <Download className="h-4 w-4 mr-2" />
               Export Report
             </Button>
-            <Button className="glow">
+            <Button className="glow" onClick={() => navigate('/marketplace')}>
               <Eye className="h-4 w-4 mr-2" />
               Browse Marketplace
             </Button>
@@ -300,7 +302,7 @@ const Portfolio = () => {
                         </div>
                         <Progress value={(investment.invested / investment.amount) * 100} />
                       </div>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => navigate('/investment-details')}>
                         View Details
                       </Button>
                     </div>
