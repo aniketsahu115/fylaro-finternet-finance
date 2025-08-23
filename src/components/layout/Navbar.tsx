@@ -5,22 +5,23 @@ import {
   Wallet,
   Menu,
   Search,
-  Globe,
-  ChevronDown,
   Sun,
   Moon,
   AlertTriangle
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { useWallet } from "@/hooks/useWallet";
 import { WalletConnectModal } from "@/components/features/WalletConnectModal";
+import SearchModal from "@/components/features/SearchModal";
+import LanguageSelector from "@/components/features/LanguageSelector";
 import { toast } from "sonner";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const { 
     isConnected, 
     address, 
@@ -30,6 +31,19 @@ const Navbar = () => {
     isOnBSC,
     switchToBSC 
   } = useWallet();
+
+  // Keyboard shortcut for search (Ctrl+K or Cmd+K)
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+        event.preventDefault();
+        setIsSearchModalOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
@@ -62,7 +76,13 @@ const Navbar = () => {
           {/* Right Side Controls */}
           <div className="flex items-center space-x-4">
             {/* Search */}
-            <Button variant="ghost" size="sm" className="hidden lg:flex navbar-button">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="hidden lg:flex navbar-button"
+              onClick={() => setIsSearchModalOpen(true)}
+              title="Search (Ctrl+K)"
+            >
               <Search className="h-5 w-5" />
             </Button>
 
@@ -76,12 +96,8 @@ const Navbar = () => {
               {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
 
-            {/* Language/Region */}
-            <Button variant="ghost" size="sm" className="hidden lg:flex navbar-button">
-              <Globe className="h-4 w-4 mr-2" />
-              EN
-              <ChevronDown className="h-3 w-3 ml-1" />
-            </Button>
+            {/* Language Selector */}
+            <LanguageSelector />
 
             {/* Notifications */}
             <Button variant="ghost" size="sm" className="relative navbar-button">
@@ -135,6 +151,12 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Search Modal */}
+      <SearchModal 
+        isOpen={isSearchModalOpen} 
+        onClose={() => setIsSearchModalOpen(false)} 
+      />
 
       {/* Wallet Connect Modal */}
       <WalletConnectModal 
