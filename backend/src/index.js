@@ -13,17 +13,24 @@ const WebSocketService = require('./services/websocketService');
 const IPFSService = require('./services/ipfsService');
 const AdvancedCreditScoring = require('./services/advancedCreditScoring');
 const OrderMatchingEngine = require('./services/orderMatchingEngine');
+const BlockchainIntegrationService = require('./services/blockchainIntegrationService');
 
 const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3001;
 
 // Initialize database connection
-connectDB().then(() => {
-  console.log('✅ Database connected successfully');
+connectDB().then((conn) => {
+  if (conn) {
+    console.log('✅ Database connected successfully');
+  }
 }).catch(err => {
-  console.error('❌ Database connection failed:', err);
-  process.exit(1);
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('⚠️ Database connection failed but continuing in development mode');
+  } else {
+    console.error('❌ Database connection failed:', err);
+    process.exit(1);
+  }
 });
 
 // Initialize services
@@ -31,12 +38,14 @@ const websocketService = new WebSocketService(server);
 const ipfsService = new IPFSService();
 const creditScoring = new AdvancedCreditScoring();
 const orderMatchingEngine = new OrderMatchingEngine(websocketService);
+const blockchainService = new BlockchainIntegrationService();
 
 // Make services available to routes
 app.locals.websocketService = websocketService;
 app.locals.ipfsService = ipfsService;
 app.locals.creditScoring = creditScoring;
 app.locals.orderMatchingEngine = orderMatchingEngine;
+app.locals.blockchainService = blockchainService;
 
 // Security middleware
 app.use(helmet({
@@ -90,6 +99,7 @@ app.use('/api/marketplace', require('./routes/marketplace'));
 app.use('/api/payments', require('./routes/payments'));
 app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/kyc', require('./routes/kyc'));
+app.use('/api/blockchain', require('./routes/blockchain'));
 
 // New enhanced routes
 app.use('/api/trading', require('./routes/trading'));

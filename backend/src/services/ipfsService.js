@@ -1,216 +1,189 @@
-const { create } = require('ipfs-http-client');
-const pinataSDK = require('@pinata/sdk');
+const axios = require('axios');
+const FormData = require('form-data');
 const crypto = require('crypto');
-const fs = require('fs');
+const fs = require('fs').promises;
+const path = require('path');
 
 class IPFSService {
   constructor() {
-    // Initialize IPFS client (using Infura or local node)
-    this.ipfs = create({
-      host: 'ipfs.infura.io',
-      port: 5001,
-      protocol: 'https',
-      headers: {
-        authorization: `Basic ${Buffer.from(
-          `${process.env.INFURA_PROJECT_ID}:${process.env.INFURA_PROJECT_SECRET}`
-        ).toString('base64')}`
-      }
-    });
-
-    // Initialize Pinata as backup/pinning service
-    this.pinata = new pinataSDK(
-      process.env.PINATA_API_KEY,
-      process.env.PINATA_SECRET_API_KEY
-    );
+    this.pinataApiKey = process.env.PINATA_API_KEY;
+    this.pinataSecretApiKey = process.env.PINATA_SECRET_API_KEY;
+    this.pinataJWT = process.env.PINATA_JWT;
+    this.initialized = false;
+    
+    // Use local storage if Pinata not configured
+    this.useLocalStorage = !this.pinataJWT;
+    this.localStorage = path.join(process.cwd(), 'uploads');
+    
+    console.log('🔧 IPFS Service initializing...');
+    if (this.useLocalStorage) {
+      console.log('📁 Using local storage mode');
+      this.ensureLocalStorage();
+    } else {
+      console.log('☁️ Using Pinata cloud storage');
+    }
   }
 
-  /**
-   * Encrypt file before storing on IPFS
-   */
-  encryptFile(buffer, password = process.env.ENCRYPTION_KEY) {
-    const algorithm = 'aes-256-gcm';
-    const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipher(algorithm, password);
-    
-    let encrypted = Buffer.concat([cipher.update(buffer), cipher.final()]);
-    const authTag = cipher.getAuthTag();
-    
-    return {
-      encryptedData: Buffer.concat([iv, authTag, encrypted]),
-      iv: iv.toString('hex'),
-      authTag: authTag.toString('hex')
-    };
-  }
-
-  /**
-   * Decrypt file retrieved from IPFS
-   */
-  decryptFile(encryptedBuffer, password = process.env.ENCRYPTION_KEY) {
-    const algorithm = 'aes-256-gcm';
-    const iv = encryptedBuffer.slice(0, 16);
-    const authTag = encryptedBuffer.slice(16, 32);
-    const encrypted = encryptedBuffer.slice(32);
-    
-    const decipher = crypto.createDecipher(algorithm, password);
-    decipher.setAuthTag(authTag);
-    
-    return Buffer.concat([decipher.update(encrypted), decipher.final()]);
-  }
-
-  /**
-   * Upload encrypted document to IPFS
-   */
-  async uploadDocument(fileBuffer, metadata = {}) {
+  async ensureLocalStorage() {
     try {
-      // Encrypt the file
-      const { encryptedData, iv, authTag } = this.encryptFile(fileBuffer);
+      await fs.mkdir(this.localStorage, { recursive: true });
+      this.initialized = true;
+    } catch (error) {
+      console.error('Failed to create local storage directory:', error);
+    }
+  }
 
-      // Create metadata with encryption info
-      const documentMetadata = {
-        ...metadata,
-        uploadTimestamp: Date.now(),
-        encryptionIv: iv,
-        encryptionAuthTag: authTag,
-        originalSize: fileBuffer.length,
-        encryptedSize: encryptedData.length
-      };
+  async initialize() {
+    if (this.initialized) return true;
+    
+    try {
+      if (this.useLocalStorage) {
+        await this.ensureLocalStorage();
+      } else {
+        // Test Pinata connection
+        const response = await axios.get('https://api.pinata.cloud/data/testAuthentication', {
+          headers: {
+            'Authorization': `Bearer ${this.pinataJWT}`
+          }
+        });
+        
+        if (response.data.message === 'Congratulations! You are communicating with the Pinata API!') {
+          this.initialized = true;
+        }
+      }
+      
+      console.log('✅ IPFS Service initialized successfully');
+      return true;
+    } catch (error) {
+      console.warn('⚠️ IPFS Service initialization failed, using local storage fallback');
+      this.useLocalStorage = true;
+      await this.ensureLocalStorage();
+      return true;
+    }
+  }
 
-      // Upload to IPFS
-      const ipfsResult = await this.ipfs.add({
-        content: encryptedData,
-        path: `document_${Date.now()}`
-      });
+  async uploadDocument(buffer, filename, metadata = {}) {
+    try {
+      if (!this.initialized) {
+        await this.initialize();
+      }
 
-      // Upload metadata separately
-      const metadataResult = await this.ipfs.add({
-        content: JSON.stringify(documentMetadata, null, 2),
-        path: `metadata_${Date.now()}.json`
-      });
+      const documentId = crypto.randomUUID();
+      const uploadTime = new Date().toISOString();
 
-      // Pin both files using Pinata for reliability
-      await this.pinata.pinByHash(ipfsResult.cid.toString());
-      await this.pinata.pinByHash(metadataResult.cid.toString());
+      if (this.useLocalStorage) {
+        // Local storage implementation
+        const filePath = path.join(this.localStorage, `${documentId}_${filename}`);
+        await fs.writeFile(filePath, buffer);
+        
+        return {
+          success: true,
+          documentId,
+          hash: crypto.createHash('sha256').update(buffer).digest('hex'),
+          url: `file://${filePath}`,
+          size: buffer.length,
+          filename,
+          uploadTime,
+          metadata
+        };
+      } else {
+        // Pinata implementation
+        const formData = new FormData();
+        formData.append('file', buffer, filename);
+        
+        const pinataMetadata = JSON.stringify({
+          name: filename,
+          keyvalues: {
+            documentId,
+            uploadTime,
+            ...metadata
+          }
+        });
+        formData.append('pinataMetadata', pinataMetadata);
 
+        const response = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData, {
+          headers: {
+            'Authorization': `Bearer ${this.pinataJWT}`,
+            ...formData.getHeaders()
+          }
+        });
+
+        return {
+          success: true,
+          documentId,
+          hash: response.data.IpfsHash,
+          url: `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`,
+          size: response.data.PinSize,
+          filename,
+          uploadTime,
+          metadata
+        };
+      }
+    } catch (error) {
+      console.error('Document upload failed:', error);
+      throw new Error(`Upload failed: ${error.message}`);
+    }
+  }
+
+  async getDocument(hash) {
+    try {
+      if (this.useLocalStorage) {
+        // For local storage, hash is actually the file path
+        const buffer = await fs.readFile(hash.replace('file://', ''));
+        return buffer;
+      } else {
+        const response = await axios.get(`https://gateway.pinata.cloud/ipfs/${hash}`, {
+          responseType: 'arraybuffer'
+        });
+        return Buffer.from(response.data);
+      }
+    } catch (error) {
+      throw new Error(`Document retrieval failed: ${error.message}`);
+    }
+  }
+
+  async createAccessLink(hash, expirationHours = 24) {
+    try {
+      const linkId = crypto.randomBytes(32).toString('hex');
+      const expiresAt = new Date();
+      expiresAt.setHours(expiresAt.getHours() + expirationHours);
+
+      // In a real implementation, you'd store this in a database
+      // For now, return a simple access link
       return {
-        documentHash: ipfsResult.cid.toString(),
-        metadataHash: metadataResult.cid.toString(),
-        encryptionInfo: {
-          iv,
-          authTag
-        },
-        metadata: documentMetadata
-      };
-    } catch (error) {
-      throw new Error(`IPFS upload failed: ${error.message}`);
-    }
-  }
-
-  /**
-   * Retrieve and decrypt document from IPFS
-   */
-  async retrieveDocument(documentHash, encryptionInfo = null) {
-    try {
-      // Get encrypted file from IPFS
-      const chunks = [];
-      for await (const chunk of this.ipfs.cat(documentHash)) {
-        chunks.push(chunk);
-      }
-      const encryptedBuffer = Buffer.concat(chunks);
-
-      // Decrypt if encryption info provided
-      if (encryptionInfo) {
-        return this.decryptFile(encryptedBuffer);
-      }
-
-      return encryptedBuffer;
-    } catch (error) {
-      throw new Error(`IPFS retrieval failed: ${error.message}`);
-    }
-  }
-
-  /**
-   * Get document metadata from IPFS
-   */
-  async getDocumentMetadata(metadataHash) {
-    try {
-      const chunks = [];
-      for await (const chunk of this.ipfs.cat(metadataHash)) {
-        chunks.push(chunk);
-      }
-      const metadataBuffer = Buffer.concat(chunks);
-      return JSON.parse(metadataBuffer.toString());
-    } catch (error) {
-      throw new Error(`Metadata retrieval failed: ${error.message}`);
-    }
-  }
-
-  /**
-   * Verify document integrity
-   */
-  async verifyDocumentIntegrity(documentHash, originalChecksum) {
-    try {
-      const document = await this.retrieveDocument(documentHash);
-      const currentChecksum = crypto
-        .createHash('sha256')
-        .update(document)
-        .digest('hex');
-
-      return currentChecksum === originalChecksum;
-    } catch (error) {
-      throw new Error(`Integrity verification failed: ${error.message}`);
-    }
-  }
-
-  /**
-   * Create shareable access link with expiration
-   */
-  async createAccessLink(documentHash, expirationHours = 24) {
-    try {
-      const accessToken = crypto.randomBytes(32).toString('hex');
-      const expirationTime = Date.now() + (expirationHours * 60 * 60 * 1000);
-
-      // Store access control in database (implement as needed)
-      const accessControl = {
-        token: accessToken,
-        documentHash,
-        expirationTime,
-        accessCount: 0,
-        maxAccess: 10
-      };
-
-      return {
-        accessUrl: `${process.env.API_BASE_URL}/api/documents/access/${accessToken}`,
-        accessToken,
-        expirationTime
+        linkId,
+        url: this.useLocalStorage ? hash : `https://gateway.pinata.cloud/ipfs/${hash}`,
+        expiresAt: expiresAt.toISOString(),
+        accessCount: 0
       };
     } catch (error) {
       throw new Error(`Access link creation failed: ${error.message}`);
     }
   }
 
-  /**
-   * List all documents for a user
-   */
-  async listUserDocuments(userId) {
+  async verifyDocumentIntegrity(hash, originalChecksum) {
     try {
-      // This would typically query your database for user's document hashes
-      // Then retrieve metadata for each
-      const userDocuments = []; // Implement database query
+      const document = await this.getDocument(hash);
+      const currentChecksum = crypto.createHash('sha256').update(document).digest('hex');
       
-      const documentsWithMetadata = await Promise.all(
-        userDocuments.map(async (doc) => {
-          const metadata = await this.getDocumentMetadata(doc.metadataHash);
-          return {
-            ...doc,
-            metadata
-          };
-        })
-      );
-
-      return documentsWithMetadata;
+      return {
+        isValid: currentChecksum === originalChecksum,
+        originalChecksum,
+        currentChecksum
+      };
     } catch (error) {
-      throw new Error(`Document listing failed: ${error.message}`);
+      throw new Error(`Document verification failed: ${error.message}`);
     }
+  }
+
+  isInitialized() {
+    return this.initialized;
+  }
+
+  async close() {
+    // Cleanup if needed
+    this.initialized = false;
+    console.log('📦 IPFS Service closed');
   }
 }
 

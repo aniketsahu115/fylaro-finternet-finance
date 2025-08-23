@@ -34,6 +34,13 @@ const connectDB = async () => {
 
     return conn;
   } catch (error) {
+    // For development environment, allow app to continue without database
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('⚠️ Database connection failed but continuing in development mode with limited functionality');
+      console.error('Database error details:', error.message);
+      return null;
+    }
+    
     console.error('Database connection failed:', error);
     process.exit(1);
   }
