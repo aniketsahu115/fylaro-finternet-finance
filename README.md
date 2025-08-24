@@ -7,7 +7,7 @@ Fylaro is a revolutionary invoice financing marketplace built on the principles 
 ![Finternet Architecture](https://github.com/aniketsahu115/fylaro-finternet-finance/blob/main/assets/Finternet%20Architecture.png)
 
 ![Features](https://github.com/aniketsahu115/fylaro-finternet-finance/blob/main/assets/Screenshot%202025-08-23%20135624.png)
-![Invoice section]()
+![Invoice section](https://github.com/aniketsahu115/fylaro-finternet-finance/blob/main/assets/Screenshot%202025-08-24%20103729.png)
 
 ##  Core Features
 
