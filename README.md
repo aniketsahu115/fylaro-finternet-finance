@@ -61,5 +61,3 @@ fylaro/
 - **Global Access**: Single sign-on for all services
 
 ---
-
-*Built with ❤️ for the future of global finance
