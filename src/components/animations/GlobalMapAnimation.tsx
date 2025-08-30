@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
 interface GlobalNode {
   id: number;
@@ -23,7 +23,7 @@ interface DataFlow {
   progress: number;
   speed: number;
   intensity: number;
-  type: 'data' | 'transaction' | 'validation';
+  type: "data" | "transaction" | "validation";
 }
 
 interface Particle {
@@ -47,51 +47,250 @@ const GlobalMapAnimation: React.FC = () => {
   const lastTimeRef = useRef<number>(0);
   const [hoveredSector, setHoveredSector] = useState<string | null>(null);
 
-  // Colors matching the market overview theme
+  // Colors matching the finance overview theme
   const colors = {
-    background: '#0B0E11',
-    mapOutline: '#2B3139',
-    nodeDefault: '#404040',
-    nodeHealthcare: '#F0B90B', // Yellow-gold
-    nodeManufacturing: '#0052FF', // Blue
-    nodeTechnology: '#00D4AA', // Green
-    nodeLogistics: '#FF6B35', // Orange
-    connectionIdle: '#2B3139',
-    connectionActive: '#F0B90B',
-    dataFlow: '#00D4AA',
-    particle: '#F0B90B',
-    text: '#FAFAFA',
-    textSecondary: '#B7BDC6',
-    glow: '#F0B90B'
+    background: "#0F0F23",
+    mapOutline: "#1E293B",
+    nodeTradeFinance: "#F0B90B", // Yellow-gold for Trade Finance
+    nodeSupplyChain: "#0052FF", // Blue for Supply Chain Finance
+    nodeWorkingCapital: "#00D4AA", // Green for Working Capital
+    nodeExportFinance: "#FF6B35", // Orange for Export Finance
+    nodeDefault: "#6B7280", // Gray for default/inactive
+    connectionIdle: "#2B3139",
+    connectionActive: "#F0B90B",
+    dataFlow: "#00D4AA",
+    particle: "#F0B90B",
+    text: "#FAFAFA",
+    textSecondary: "#B7BDC6",
+    glow: "#F0B90B",
   };
 
-  // Major global financial/business centers
+  // Major global financial centers
   const cityData = [
-    { name: 'New York', lat: 40.7128, lng: -74.0060, sector: 'Healthcare', volume: '$45M', apy: '12.5%' },
-    { name: 'London', lat: 51.5074, lng: -0.1278, sector: 'Manufacturing', volume: '$32M', apy: '10.8%' },
-    { name: 'Tokyo', lat: 35.6762, lng: 139.6503, sector: 'Technology', volume: '$28M', apy: '14.2%' },
-    { name: 'Singapore', lat: 1.3521, lng: 103.8198, sector: 'Logistics', volume: '$22M', apy: '11.3%' },
-    { name: 'Hong Kong', lat: 22.3193, lng: 114.1694, sector: 'Technology', volume: '$18M', apy: '13.1%' },
-    { name: 'Frankfurt', lat: 50.1109, lng: 8.6821, sector: 'Manufacturing', volume: '$25M', apy: '9.7%' },
-    { name: 'Sydney', lat: -33.8688, lng: 151.2093, sector: 'Healthcare', volume: '$15M', apy: '11.8%' },
-    { name: 'São Paulo', lat: -23.5505, lng: -46.6333, sector: 'Logistics', volume: '$12M', apy: '10.4%' },
-    { name: 'Dubai', lat: 25.2048, lng: 55.2708, sector: 'Technology', volume: '$20M', apy: '12.9%' },
-    { name: 'Mumbai', lat: 19.0760, lng: 72.8777, sector: 'Healthcare', volume: '$16M', apy: '13.5%' },
-    { name: 'Toronto', lat: 43.6532, lng: -79.3832, sector: 'Manufacturing', volume: '$19M', apy: '10.2%' },
-    { name: 'Zurich', lat: 47.3769, lng: 8.5417, sector: 'Technology', volume: '$14M', apy: '11.7%' }
+    {
+      name: "New York",
+      lat: 40.7128,
+      lng: -74.006,
+      sector: "Trade Finance",
+      volume: "$45M",
+      apy: "12.5%",
+    },
+    {
+      name: "London",
+      lat: 51.5074,
+      lng: -0.1278,
+      sector: "Supply Chain Finance",
+      volume: "$32M",
+      apy: "10.8%",
+    },
+    {
+      name: "Tokyo",
+      lat: 35.6762,
+      lng: 139.6503,
+      sector: "Working Capital",
+      volume: "$28M",
+      apy: "14.2%",
+    },
+    {
+      name: "Singapore",
+      lat: 1.3521,
+      lng: 103.8198,
+      sector: "Export Finance",
+      volume: "$22M",
+      apy: "11.3%",
+    },
+    {
+      name: "Hong Kong",
+      lat: 22.3193,
+      lng: 114.1694,
+      sector: "Working Capital",
+      volume: "$18M",
+      apy: "13.1%",
+    },
+    {
+      name: "Frankfurt",
+      lat: 50.1109,
+      lng: 8.6821,
+      sector: "Supply Chain Finance",
+      volume: "$25M",
+      apy: "9.7%",
+    },
+    {
+      name: "Sydney",
+      lat: -33.8688,
+      lng: 151.2093,
+      sector: "Trade Finance",
+      volume: "$15M",
+      apy: "11.8%",
+    },
+    {
+      name: "São Paulo",
+      lat: -23.5505,
+      lng: -46.6333,
+      sector: "Export Finance",
+      volume: "$12M",
+      apy: "10.4%",
+    },
+    {
+      name: "Dubai",
+      lat: 25.2048,
+      lng: 55.2708,
+      sector: "Working Capital",
+      volume: "$20M",
+      apy: "12.9%",
+    },
+    {
+      name: "Mumbai",
+      lat: 19.076,
+      lng: 72.8777,
+      sector: "Trade Finance",
+      volume: "$16M",
+      apy: "13.5%",
+    },
+    {
+      name: "Toronto",
+      lat: 43.6532,
+      lng: -79.3832,
+      sector: "Supply Chain Finance",
+      volume: "$19M",
+      apy: "10.2%",
+    },
+    {
+      name: "Zurich",
+      lat: 47.3769,
+      lng: 8.5417,
+      sector: "Working Capital",
+      volume: "$14M",
+      apy: "11.7%",
+    },
   ];
 
   const getSectorColor = (sector: string): string => {
     switch (sector) {
-      case 'Healthcare': return colors.nodeHealthcare;
-      case 'Manufacturing': return colors.nodeManufacturing;
-      case 'Technology': return colors.nodeTechnology;
-      case 'Logistics': return colors.nodeLogistics;
-      default: return colors.nodeDefault;
+      case "Trade Finance":
+        return colors.nodeTradeFinance;
+      case "Supply Chain Finance":
+        return colors.nodeSupplyChain;
+      case "Working Capital":
+        return colors.nodeWorkingCapital;
+      case "Export Finance":
+        return colors.nodeExportFinance;
+      default:
+        return colors.nodeDefault;
     }
   };
 
-  const projectCoordinates = (lat: number, lng: number, width: number, height: number) => {
+  // Finance sector icon drawing functions
+  const drawFinanceIcon = (
+    ctx: CanvasRenderingContext2D,
+    sector: string,
+    x: number,
+    y: number,
+    size: number = 12
+  ) => {
+    ctx.save();
+    ctx.fillStyle = "#FFFFFF";
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.lineWidth = 1.5;
+
+    const iconSize = size * 0.8; // Make icons slightly smaller than the node
+    const halfSize = iconSize / 2;
+
+    switch (sector) {
+      case "Trade Finance": {
+        // Draw document/invoice icon
+        ctx.fillRect(x - halfSize + 1, y - halfSize, iconSize - 2, iconSize);
+        ctx.strokeRect(x - halfSize + 1, y - halfSize, iconSize - 2, iconSize);
+        // Add document lines
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x - halfSize + 3, y - halfSize + 3);
+        ctx.lineTo(x + halfSize - 1, y - halfSize + 3);
+        ctx.moveTo(x - halfSize + 3, y - 1);
+        ctx.lineTo(x + halfSize - 1, y - 1);
+        ctx.moveTo(x - halfSize + 3, y + halfSize - 3);
+        ctx.lineTo(x + halfSize - 1, y + halfSize - 3);
+        ctx.stroke();
+        break;
+      }
+
+      case "Supply Chain Finance": {
+        // Draw connected boxes representing supply chain
+        const boxSize = iconSize / 4;
+        ctx.fillRect(x - halfSize, y - boxSize / 2, boxSize, boxSize);
+        ctx.fillRect(x - boxSize / 2, y - boxSize / 2, boxSize, boxSize);
+        ctx.fillRect(x + halfSize - boxSize, y - boxSize / 2, boxSize, boxSize);
+
+        // Connect with arrows
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x - halfSize + boxSize, y);
+        ctx.lineTo(x - boxSize / 2, y);
+        ctx.moveTo(x + boxSize / 2, y);
+        ctx.lineTo(x + halfSize - boxSize, y);
+        // Add arrow heads
+        ctx.moveTo(x - boxSize / 2 - 2, y - 2);
+        ctx.lineTo(x - boxSize / 2, y);
+        ctx.lineTo(x - boxSize / 2 - 2, y + 2);
+        ctx.moveTo(x + halfSize - boxSize - 2, y - 2);
+        ctx.lineTo(x + halfSize - boxSize, y);
+        ctx.lineTo(x + halfSize - boxSize - 2, y + 2);
+        ctx.stroke();
+        break;
+      }
+
+      case "Working Capital": {
+        // Draw dollar sign in a circle
+        ctx.beginPath();
+        ctx.arc(x, y, halfSize, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.font = `bold ${iconSize * 0.8}px Arial`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("$", x, y + 1);
+        break;
+      }
+
+      case "Export Finance": {
+        // Draw globe with shipping elements
+        ctx.beginPath();
+        ctx.arc(x, y, halfSize, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Add meridian lines
+        ctx.beginPath();
+        ctx.moveTo(x, y - halfSize);
+        ctx.lineTo(x, y + halfSize);
+        ctx.moveTo(x - halfSize, y);
+        ctx.lineTo(x + halfSize, y);
+        // Add curved meridians
+        ctx.moveTo(x - halfSize * 0.7, y - halfSize);
+        ctx.quadraticCurveTo(x, y, x - halfSize * 0.7, y + halfSize);
+        ctx.moveTo(x + halfSize * 0.7, y - halfSize);
+        ctx.quadraticCurveTo(x, y, x + halfSize * 0.7, y + halfSize);
+        ctx.stroke();
+        break;
+      }
+
+      default: {
+        // Default icon - centered dot
+        ctx.beginPath();
+        ctx.arc(x, y, halfSize * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        break;
+      }
+    }
+
+    ctx.restore();
+  };
+
+  const projectCoordinates = (
+    lat: number,
+    lng: number,
+    width: number,
+    height: number
+  ) => {
     // Simple equirectangular projection
     const x = ((lng + 180) / 360) * width;
     const y = ((90 - lat) / 180) * height;
@@ -102,7 +301,7 @@ const GlobalMapAnimation: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     // Set canvas size with high DPI support
@@ -111,29 +310,29 @@ const GlobalMapAnimation: React.FC = () => {
       if (container) {
         const rect = container.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
-        
+
         canvas.width = rect.width * dpr;
         canvas.height = rect.height * dpr;
-        canvas.style.width = rect.width + 'px';
-        canvas.style.height = rect.height + 'px';
-        
+        canvas.style.width = rect.width + "px";
+        canvas.style.height = rect.height + "px";
+
         ctx.scale(dpr, dpr);
         ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
+        ctx.imageSmoothingQuality = "high";
       }
     };
 
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener("resize", resizeCanvas);
 
     // Initialize nodes
     const initializeNodes = () => {
       const container = canvas.parentElement;
       if (!container) return;
-      
+
       const width = container.clientWidth;
       const height = container.clientHeight;
-      
+
       nodesRef.current = cityData.map((city, index) => {
         const { x, y } = projectCoordinates(city.lat, city.lng, width, height);
         return {
@@ -149,7 +348,7 @@ const GlobalMapAnimation: React.FC = () => {
           apy: city.apy,
           sector: city.sector,
           isActive: Math.random() > 0.3,
-          lastPulse: 0
+          lastPulse: 0,
         };
       });
 
@@ -159,8 +358,8 @@ const GlobalMapAnimation: React.FC = () => {
         nodesRef.current.forEach((otherNode, j) => {
           if (i !== j) {
             const distance = Math.sqrt(
-              Math.pow(node.x - otherNode.x, 2) + 
-              Math.pow(node.y - otherNode.y, 2)
+              Math.pow(node.x - otherNode.x, 2) +
+                Math.pow(node.y - otherNode.y, 2)
             );
             // Connect nodes within a certain distance
             if (distance < width * 0.4 && Math.random() > 0.6) {
@@ -180,17 +379,19 @@ const GlobalMapAnimation: React.FC = () => {
 
     // Create data flow
     const createDataFlow = () => {
-      const activeNodes = nodesRef.current.filter(node => node.isActive);
+      const activeNodes = nodesRef.current.filter((node) => node.isActive);
       if (activeNodes.length < 2) return;
 
-      const fromNode = activeNodes[Math.floor(Math.random() * activeNodes.length)];
+      const fromNode =
+        activeNodes[Math.floor(Math.random() * activeNodes.length)];
       const possibleTargets = fromNode.connections
-        .map(id => nodesRef.current[id])
-        .filter(node => node.isActive);
+        .map((id) => nodesRef.current[id])
+        .filter((node) => node.isActive);
 
       if (possibleTargets.length === 0) return;
 
-      const toNode = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
+      const toNode =
+        possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
 
       dataFlowsRef.current.push({
         id: Date.now() + Math.random(),
@@ -199,7 +400,7 @@ const GlobalMapAnimation: React.FC = () => {
         progress: 0,
         speed: 0.005 + Math.random() * 0.01,
         intensity: 0.5 + Math.random() * 0.5,
-        type: Math.random() > 0.5 ? 'data' : 'transaction'
+        type: Math.random() > 0.5 ? "data" : "transaction",
       });
     };
 
@@ -215,13 +416,17 @@ const GlobalMapAnimation: React.FC = () => {
           life: 1,
           maxLife: 1,
           size: Math.random() * 3 + 1,
-          opacity: 1
+          opacity: 1,
         });
       }
     };
 
     // Draw world map outline (simplified)
-    const drawWorldMap = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+    const drawWorldMap = (
+      ctx: CanvasRenderingContext2D,
+      width: number,
+      height: number
+    ) => {
       ctx.strokeStyle = colors.mapOutline;
       ctx.lineWidth = 1;
       ctx.globalAlpha = 0.3;
@@ -235,14 +440,24 @@ const GlobalMapAnimation: React.FC = () => {
         // Europe
         { x: width * 0.45, y: height * 0.25, w: width * 0.15, h: height * 0.2 },
         // Africa
-        { x: width * 0.48, y: height * 0.45, w: width * 0.12, h: height * 0.35 },
+        {
+          x: width * 0.48,
+          y: height * 0.45,
+          w: width * 0.12,
+          h: height * 0.35,
+        },
         // Asia
         { x: width * 0.6, y: height * 0.2, w: width * 0.25, h: height * 0.4 },
         // Australia
-        { x: width * 0.75, y: height * 0.65, w: width * 0.12, h: height * 0.15 }
+        {
+          x: width * 0.75,
+          y: height * 0.65,
+          w: width * 0.12,
+          h: height * 0.15,
+        },
       ];
 
-      continents.forEach(continent => {
+      continents.forEach((continent) => {
         ctx.strokeRect(continent.x, continent.y, continent.w, continent.h);
       });
 
@@ -252,13 +467,13 @@ const GlobalMapAnimation: React.FC = () => {
     // Animation loop
     const animate = (currentTime: number) => {
       if (!canvas.parentElement) return;
-      
+
       const deltaTime = currentTime - lastTimeRef.current;
       lastTimeRef.current = currentTime;
-      
+
       const width = canvas.parentElement.clientWidth;
       const height = canvas.parentElement.clientHeight;
-      
+
       // Clear canvas
       ctx.fillStyle = colors.background;
       ctx.fillRect(0, 0, width, height);
@@ -267,9 +482,9 @@ const GlobalMapAnimation: React.FC = () => {
       drawWorldMap(ctx, width, height);
 
       // Update and draw data flows
-      dataFlowsRef.current = dataFlowsRef.current.filter(flow => {
+      dataFlowsRef.current = dataFlowsRef.current.filter((flow) => {
         flow.progress += flow.speed;
-        
+
         if (flow.progress >= 1) {
           // Flow reached destination, create particles
           const toNode = nodesRef.current[flow.toNode];
@@ -279,7 +494,7 @@ const GlobalMapAnimation: React.FC = () => {
 
         const fromNode = nodesRef.current[flow.fromNode];
         const toNode = nodesRef.current[flow.toNode];
-        
+
         const currentX = fromNode.x + (toNode.x - fromNode.x) * flow.progress;
         const currentY = fromNode.y + (toNode.y - fromNode.y) * flow.progress;
 
@@ -292,7 +507,8 @@ const GlobalMapAnimation: React.FC = () => {
         ctx.stroke();
 
         // Draw moving data packet
-        ctx.fillStyle = flow.type === 'data' ? colors.dataFlow : colors.particle;
+        ctx.fillStyle =
+          flow.type === "data" ? colors.dataFlow : colors.particle;
         ctx.shadowColor = ctx.fillStyle;
         ctx.shadowBlur = 8;
         ctx.beginPath();
@@ -304,7 +520,7 @@ const GlobalMapAnimation: React.FC = () => {
       });
 
       // Update and draw particles
-      particlesRef.current = particlesRef.current.filter(particle => {
+      particlesRef.current = particlesRef.current.filter((particle) => {
         particle.x += particle.vx;
         particle.y += particle.vy;
         particle.life -= 0.02;
@@ -314,16 +530,22 @@ const GlobalMapAnimation: React.FC = () => {
 
         ctx.fillStyle = `rgba(240, 185, 11, ${particle.opacity})`;
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size * particle.life, 0, Math.PI * 2);
+        ctx.arc(
+          particle.x,
+          particle.y,
+          particle.size * particle.life,
+          0,
+          Math.PI * 2
+        );
         ctx.fill();
 
         return true;
       });
 
       // Update and draw nodes
-      nodesRef.current.forEach(node => {
+      nodesRef.current.forEach((node) => {
         node.pulsePhase += 0.05;
-        
+
         // Random activity changes
         if (Math.random() < 0.01) {
           node.isActive = !node.isActive;
@@ -332,23 +554,31 @@ const GlobalMapAnimation: React.FC = () => {
         // Node base circle
         const baseRadius = 8;
         const pulseRadius = baseRadius + Math.sin(node.pulsePhase) * 3;
-        
+
         // Outer glow
         const gradient = ctx.createRadialGradient(
-          node.x, node.y, 0,
-          node.x, node.y, pulseRadius + 10
+          node.x,
+          node.y,
+          0,
+          node.x,
+          node.y,
+          pulseRadius + 10
         );
         gradient.addColorStop(0, `${getSectorColor(node.sector)}66`);
-        gradient.addColorStop(1, 'transparent');
-        
+        gradient.addColorStop(1, "transparent");
+
         ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(node.x, node.y, pulseRadius + 10, 0, Math.PI * 2);
         ctx.fill();
 
         // Main node
-        ctx.fillStyle = node.isActive ? getSectorColor(node.sector) : colors.nodeDefault;
-        ctx.shadowColor = node.isActive ? getSectorColor(node.sector) : 'transparent';
+        ctx.fillStyle = node.isActive
+          ? getSectorColor(node.sector)
+          : colors.nodeDefault;
+        ctx.shadowColor = node.isActive
+          ? getSectorColor(node.sector)
+          : "transparent";
         ctx.shadowBlur = node.isActive ? 10 : 0;
         ctx.beginPath();
         ctx.arc(node.x, node.y, baseRadius, 0, Math.PI * 2);
@@ -363,6 +593,9 @@ const GlobalMapAnimation: React.FC = () => {
           ctx.arc(node.x, node.y, baseRadius * 0.6, 0, Math.PI * 2);
           ctx.fill();
         }
+
+        // Draw sector-specific icon
+        drawFinanceIcon(ctx, node.sector, node.x, node.y, baseRadius);
       });
 
       // Create new data flows periodically
@@ -376,7 +609,7 @@ const GlobalMapAnimation: React.FC = () => {
     animationFrameRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener("resize", resizeCanvas);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
@@ -390,35 +623,49 @@ const GlobalMapAnimation: React.FC = () => {
         className="absolute inset-0 w-full h-full"
         style={{ background: colors.background }}
       />
-      
+
       {/* Legend */}
       <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-3 text-xs">
-        <div className="text-white font-medium mb-2">Live Market Overview</div>
+        <div className="text-white font-medium mb-2">Live Finance Overview</div>
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.nodeHealthcare }}></div>
-            <span className="text-gray-300">Healthcare</span>
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: colors.nodeTradeFinance }}
+            ></div>
+            <span className="text-gray-300">Trade Finance</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.nodeManufacturing }}></div>
-            <span className="text-gray-300">Manufacturing</span>
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: colors.nodeSupplyChain }}
+            ></div>
+            <span className="text-gray-300">Supply Chain Finance</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.nodeTechnology }}></div>
-            <span className="text-gray-300">Technology</span>
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: colors.nodeWorkingCapital }}
+            ></div>
+            <span className="text-gray-300">Working Capital</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.nodeLogistics }}></div>
-            <span className="text-gray-300">Logistics</span>
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: colors.nodeExportFinance }}
+            ></div>
+            <span className="text-gray-300">Export Finance</span>
           </div>
         </div>
       </div>
 
       {/* Real-time stats overlay */}
       <div className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-sm rounded-lg p-3">
-        <div className="text-white font-medium text-sm mb-1">Real-time performance across industry sectors</div>
+        <div className="text-white font-medium text-sm mb-1">
+          Real-time performance across finance sectors
+        </div>
         <div className="text-gray-400 text-xs">
-          Global network activity • Live data flow visualization
+          Global finance network activity • Live invoice finance visualization
         </div>
       </div>
     </div>

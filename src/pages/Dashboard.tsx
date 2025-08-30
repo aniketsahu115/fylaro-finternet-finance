@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import CreditScoring from "@/components/features/CreditScoring";
+import FinternInteractiveDemo from "@/components/features/FinternInteractiveDemo";
 import { useNavigate } from "react-router-dom";
 import {
   DollarSign,
@@ -14,7 +15,7 @@ import {
   ArrowDownRight,
   Upload,
   Eye,
-  MoreHorizontal
+  MoreHorizontal,
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -31,7 +32,7 @@ const Dashboard = () => {
       title: "Active Invoices",
       value: "23",
       change: "+3",
-      trend: "up", 
+      trend: "up",
       icon: FileText,
     },
     {
@@ -60,7 +61,7 @@ const Dashboard = () => {
       daysLeft: 12,
     },
     {
-      id: "INV-002", 
+      id: "INV-002",
       company: "BuildCo Inc",
       amount: "$89,500",
       status: "Funded",
@@ -88,7 +89,7 @@ const Dashboard = () => {
               Welcome back! Here's your invoice financing overview.
             </p>
           </div>
-          <Button className="glow" onClick={() => navigate('/upload')}>
+          <Button className="glow" onClick={() => navigate("/upload")}>
             <Upload className="h-4 w-4 mr-2" />
             Upload Invoice
           </Button>
@@ -97,7 +98,10 @@ const Dashboard = () => {
         {/* Stats Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
-            <Card key={stat.title} className="glass-card hover:highlight-border transition-smooth">
+            <Card
+              key={stat.title}
+              className="glass-card hover:highlight-border transition-smooth"
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
                   {stat.title}
@@ -112,7 +116,11 @@ const Dashboard = () => {
                   ) : (
                     <ArrowDownRight className="h-4 w-4 text-destructive mr-1" />
                   )}
-                  <span className={stat.trend === "up" ? "text-success" : "text-destructive"}>
+                  <span
+                    className={
+                      stat.trend === "up" ? "text-success" : "text-destructive"
+                    }
+                  >
                     {stat.change}
                   </span>
                   <span className="ml-1">from last month</span>
@@ -129,7 +137,11 @@ const Dashboard = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Recent Invoices</CardTitle>
-                <Button variant="ghost" size="sm" onClick={() => navigate('/marketplace')}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate("/marketplace")}
+                >
                   <Eye className="h-4 w-4 mr-2" />
                   View All
                 </Button>
@@ -145,14 +157,24 @@ const Dashboard = () => {
                     <div className="space-y-1">
                       <div className="flex items-center space-x-2">
                         <span className="font-medium">{invoice.id}</span>
-                        <Badge 
-                          variant={invoice.status === "Funded" ? "default" : "secondary"}
-                          className={invoice.status === "Funded" ? "bg-success text-success-foreground" : ""}
+                        <Badge
+                          variant={
+                            invoice.status === "Funded"
+                              ? "default"
+                              : "secondary"
+                          }
+                          className={
+                            invoice.status === "Funded"
+                              ? "bg-success text-success-foreground"
+                              : ""
+                          }
                         >
                           {invoice.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground">{invoice.company}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {invoice.company}
+                      </p>
                       <p className="text-lg font-semibold">{invoice.amount}</p>
                     </div>
                     <div className="text-right space-y-2">
@@ -161,7 +183,9 @@ const Dashboard = () => {
                         <span className="text-sm">{invoice.funded}%</span>
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        {invoice.daysLeft > 0 ? `${invoice.daysLeft} days left` : "Completed"}
+                        {invoice.daysLeft > 0
+                          ? `${invoice.daysLeft} days left`
+                          : "Completed"}
                       </p>
                     </div>
                   </div>
@@ -176,24 +200,51 @@ const Dashboard = () => {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button className="w-full glow" onClick={() => navigate('/upload')}>
+              <Button
+                className="w-full glow"
+                onClick={() => navigate("/upload")}
+              >
                 <Upload className="h-4 w-4 mr-2" />
                 Upload New Invoice
               </Button>
-              <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10" onClick={() => navigate('/marketplace')}>
+              <Button
+                variant="outline"
+                className="w-full border-primary/30 hover:bg-primary/10"
+                onClick={() => navigate("/marketplace")}
+              >
                 <Eye className="h-4 w-4 mr-2" />
                 Browse Marketplace
               </Button>
-              <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10" onClick={() => navigate('/analytics')}>
+              <Button
+                variant="outline"
+                className="w-full border-primary/30 hover:bg-primary/10"
+                onClick={() => navigate("/analytics")}
+              >
                 <TrendingUp className="h-4 w-4 mr-2" />
                 View Analytics
               </Button>
-              <Button variant="outline" className="w-full border-primary/30 hover:bg-primary/10" onClick={() => navigate('/portfolio')}>
+              <Button
+                variant="outline"
+                className="w-full border-primary/30 hover:bg-primary/10"
+                onClick={() => navigate("/portfolio")}
+              >
                 <Users className="h-4 w-4 mr-2" />
                 Investor Network
               </Button>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Finternet Interactive Demo */}
+        <div className="space-y-4">
+          <div>
+            <h2 className="text-2xl font-bold">Global Finternet Network</h2>
+            <p className="text-muted-foreground">
+              Real-time visualization of decentralized financial infrastructure
+              and cross-border tokenized transactions
+            </p>
+          </div>
+          <FinternInteractiveDemo />
         </div>
 
         {/* Credit Score Component */}
