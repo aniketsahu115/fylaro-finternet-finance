@@ -62,4 +62,4 @@ fylaro/
 
 ---
 
-*Built with ❤️ for the future of global finance*
+*Built with ❤️ for the future of global finance
