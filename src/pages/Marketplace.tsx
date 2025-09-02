@@ -2,8 +2,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "@/components/ui/use-toast";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import InvestmentAnalysis from "@/components/features/InvestmentAnalysis";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +22,7 @@ import {
   DollarSign,
   Star,
   Shield,
-  Target
+  Target,
 } from "lucide-react";
 
 const Marketplace = () => {
@@ -39,7 +46,7 @@ const Marketplace = () => {
       id: "INV-002",
       company: "Green Energy Corp",
       amount: 89500,
-      currency: "USD", 
+      currency: "USD",
       dueDate: "2024-04-22",
       funded: 34,
       creditScore: 792,
@@ -80,19 +87,23 @@ const Marketplace = () => {
   ];
 
   const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 0,
     }).format(amount);
   };
 
   const getRiskColor = (risk: string) => {
     switch (risk) {
-      case "Low": return "text-success";
-      case "Medium": return "text-warning";
-      case "High": return "text-destructive";
-      default: return "text-muted-foreground";
+      case "Low":
+        return "text-success";
+      case "Medium":
+        return "text-warning";
+      case "High":
+        return "text-destructive";
+      default:
+        return "text-muted-foreground";
     }
   };
 
@@ -155,14 +166,26 @@ const Marketplace = () => {
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="amount-desc">Amount (High to Low)</SelectItem>
-                  <SelectItem value="amount-asc">Amount (Low to High)</SelectItem>
-                  <SelectItem value="return-desc">Return (High to Low)</SelectItem>
+                  <SelectItem value="amount-desc">
+                    Amount (High to Low)
+                  </SelectItem>
+                  <SelectItem value="amount-asc">
+                    Amount (Low to High)
+                  </SelectItem>
+                  <SelectItem value="return-desc">
+                    Return (High to Low)
+                  </SelectItem>
                   <SelectItem value="credit-desc">Credit Score</SelectItem>
                   <SelectItem value="time-asc">Time Remaining</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" className="border-primary/30 hover:bg-primary/10" onClick={() => {/* Filter functionality can be added later */}}>
+              <Button
+                variant="outline"
+                className="border-primary/30 hover:bg-primary/10"
+                onClick={() => {
+                  /* Filter functionality can be added later */
+                }}
+              >
                 <Filter className="h-4 w-4 mr-2" />
                 Filters
               </Button>
@@ -173,12 +196,17 @@ const Marketplace = () => {
         {/* Invoice Listings */}
         <div className="grid gap-6 lg:grid-cols-2">
           {invoiceListings.map((invoice) => (
-            <Card key={invoice.id} className="glass-card hover:highlight-border transition-smooth group">
+            <Card
+              key={invoice.id}
+              className="glass-card hover:highlight-border transition-smooth group"
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
-                      <CardTitle className="text-lg">{invoice.company}</CardTitle>
+                      <CardTitle className="text-lg">
+                        {invoice.company}
+                      </CardTitle>
                       {invoice.verified && (
                         <Shield className="h-4 w-4 text-success" />
                       )}
@@ -189,9 +217,11 @@ const Marketplace = () => {
                       <span>{invoice.industry}</span>
                     </div>
                   </div>
-                  <Badge 
+                  <Badge
                     variant="secondary"
-                    className={`${getRiskColor(invoice.riskLevel)} bg-secondary/50`}
+                    className={`${getRiskColor(
+                      invoice.riskLevel
+                    )} bg-secondary/50`}
                   >
                     {invoice.riskLevel} Risk
                   </Badge>
@@ -201,14 +231,20 @@ const Marketplace = () => {
                 {/* Amount and Return */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-2xl font-bold">{formatAmount(invoice.amount)}</p>
-                    <p className="text-sm text-muted-foreground">Invoice Amount</p>
+                    <p className="text-2xl font-bold">
+                      {formatAmount(invoice.amount)}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Invoice Amount
+                    </p>
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-semibold text-success">
                       {invoice.expectedReturn}%
                     </p>
-                    <p className="text-sm text-muted-foreground">Expected Return</p>
+                    <p className="text-sm text-muted-foreground">
+                      Expected Return
+                    </p>
                   </div>
                 </div>
 
@@ -221,7 +257,8 @@ const Marketplace = () => {
                   <Progress value={invoice.funded} />
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span>
-                      {formatAmount((invoice.amount * invoice.funded) / 100)} raised
+                      {formatAmount((invoice.amount * invoice.funded) / 100)}{" "}
+                      raised
                     </span>
                     <span>{invoice.daysLeft} days left</span>
                   </div>
@@ -232,9 +269,13 @@ const Marketplace = () => {
                   <div className="text-center">
                     <div className="flex items-center justify-center space-x-1">
                       <Star className="h-4 w-4 text-primary" />
-                      <span className="font-semibold">{invoice.creditScore}</span>
+                      <span className="font-semibold">
+                        {invoice.creditScore}
+                      </span>
                     </div>
-                    <p className="text-xs text-muted-foreground">Credit Score</p>
+                    <p className="text-xs text-muted-foreground">
+                      Credit Score
+                    </p>
                   </div>
                   <div className="text-center">
                     <div className="flex items-center justify-center space-x-1">
@@ -246,7 +287,9 @@ const Marketplace = () => {
                   <div className="text-center">
                     <div className="flex items-center justify-center space-x-1">
                       <TrendingUp className="h-4 w-4 text-success" />
-                      <span className="font-semibold">{invoice.expectedReturn}%</span>
+                      <span className="font-semibold">
+                        {invoice.expectedReturn}%
+                      </span>
                     </div>
                     <p className="text-xs text-muted-foreground">ROI</p>
                   </div>
@@ -254,11 +297,18 @@ const Marketplace = () => {
 
                 {/* Action Buttons */}
                 <div className="flex space-x-2 pt-2">
-                  <Button className="flex-1 glow group-hover:scale-105 transition-smooth" onClick={() => navigate('/investment-details')}>
+                  <Button
+                    className="flex-1 glow group-hover:scale-105 transition-smooth"
+                    onClick={() => navigate("/investment-details")}
+                  >
                     <Target className="h-4 w-4 mr-2" />
                     Invest Now
                   </Button>
-                  <Button variant="outline" className="flex-1 border-primary/30 hover:bg-primary/10" onClick={() => navigate('/investment-details')}>
+                  <Button
+                    variant="outline"
+                    className="flex-1 border-primary/30 hover:bg-primary/10"
+                    onClick={() => navigate("/investment-details")}
+                  >
                     View Details
                   </Button>
                 </div>
@@ -268,14 +318,25 @@ const Marketplace = () => {
         </div>
 
         {/* Investment Analysis */}
-        <InvestmentAnalysis 
-          invoiceId="marketplace-overview" 
-          companyName="Market Analysis" 
+        <InvestmentAnalysis
+          invoiceId="marketplace-overview"
+          companyName="Market Analysis"
         />
 
         {/* Load More */}
         <div className="text-center pt-6">
-          <Button variant="outline" size="lg" onClick={() => {/* Load more functionality can be added later */}}>
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => {
+              toast({
+                title: "Loading More Listings",
+                description: "Fetching additional investment opportunities...",
+              });
+              // In a real app, this would load more data from the API
+              console.log("Loading more marketplace listings");
+            }}
+          >
             Load More Listings
           </Button>
         </div>
