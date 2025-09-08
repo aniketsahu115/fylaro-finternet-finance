@@ -26,19 +26,6 @@ Fylaro is a revolutionary invoice financing marketplace built on the principles 
 - **Automated Settlement**: Seamless payment processing
 - **Real-time Analytics**: Track performance and returns
 
-##  Project Structure
-
-```
-fylaro/
-├── src/                 # Frontend React application
-│   ├── components/      # UI components
-│   ├── pages/          # Application pages
-│   └── lib/            # Utilities
-├── contracts/          # Smart contracts
-├── backend/            # Node.js API
-└── docs/               # Documentation
-```
-
 ##  Getting Started
 
 1. **Install dependencies**: `npm install`
