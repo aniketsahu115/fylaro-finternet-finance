@@ -4,18 +4,15 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
 /**
  * @title InvoiceToken
  * @dev ERC1155 contract for tokenizing invoices with fractional ownership on the Finternet
  */
 contract InvoiceToken is ERC1155, Ownable, ReentrancyGuard, Pausable {
-    using Counters for Counters.Counter;
-    
-    Counters.Counter private _tokenIdCounter;
+    uint256 private _tokenIdCounter;
     
     struct Invoice {
         uint256 totalValue;
@@ -99,8 +96,8 @@ contract InvoiceToken is ERC1155, Ownable, ReentrancyGuard, Pausable {
         require(_riskRating >= 1 && _riskRating <= 10, "Invalid risk rating");
         require(invoiceIdToTokenId[_invoiceId] == 0, "Invoice already tokenized");
         
-        _tokenIdCounter.increment();
-        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter++;
+        uint256 tokenId = _tokenIdCounter;
         
         invoices[tokenId] = Invoice({
             totalValue: _totalValue,
