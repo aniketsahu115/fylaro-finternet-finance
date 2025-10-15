@@ -6,7 +6,7 @@ import BinanceBlockchainAnimation from "@/components/animations/BinanceBlockchai
 import GlobalMapAnimation from "@/components/animations/GlobalMapAnimation";
 import ScrollTriggeredFintechIcons from "@/components/animations/ScrollTriggeredFintechIcons";
 import DigitalVaultAnimation from "@/components/animations/DigitalVaultAnimationClean";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   ArrowRight,
   Shield,
@@ -689,9 +689,12 @@ const Index = () => {
               <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-3 text-muted-foreground">
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link
+                    to="/help"
+                    className="hover:text-primary transition-colors"
+                  >
                     Help Center
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a href="#" className="hover:text-primary transition-colors">
@@ -704,9 +707,12 @@ const Index = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link
+                    to="/legal"
+                    className="hover:text-primary transition-colors"
+                  >
                     Legal
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -718,15 +724,24 @@ const Index = () => {
               platform.
             </p>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <a href="#" className="hover:text-primary transition-colors">
+              <Link
+                to="/legal#privacy"
+                className="hover:text-primary transition-colors"
+              >
                 Privacy Policy
-              </a>
-              <a href="#" className="hover:text-primary transition-colors">
+              </Link>
+              <Link
+                to="/legal#terms"
+                className="hover:text-primary transition-colors"
+              >
                 Terms of Service
-              </a>
-              <a href="#" className="hover:text-primary transition-colors">
+              </Link>
+              <Link
+                to="/legal#risk"
+                className="hover:text-primary transition-colors"
+              >
                 Risk Disclosure
-              </a>
+              </Link>
             </div>
           </div>
         </div>
