@@ -21,10 +21,10 @@ import {
 const SettingsPage = () => {
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-8 max-w-6xl mx-auto">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground flex items-center">
+            <h1 className="text-3xl lg:text-4xl font-bold text-foreground flex items-center">
               <Settings className="h-8 w-8 mr-3" />
               Settings
             </h1>
@@ -34,24 +34,44 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="notifications">Notifications</TabsTrigger>
-            <TabsTrigger value="security">Security</TabsTrigger>
-            <TabsTrigger value="preferences">Preferences</TabsTrigger>
+        <Tabs defaultValue="profile" className="space-y-8">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-muted/40 backdrop-blur-sm">
+            <TabsTrigger
+              value="profile"
+              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              Profile
+            </TabsTrigger>
+            <TabsTrigger
+              value="notifications"
+              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              Notifications
+            </TabsTrigger>
+            <TabsTrigger
+              value="security"
+              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              Security
+            </TabsTrigger>
+            <TabsTrigger
+              value="preferences"
+              className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              Preferences
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="profile" className="space-y-6">
-            <Card>
+            <Card className="bg-card/60 backdrop-blur border-border">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <User className="h-5 w-5 mr-2" />
                   Profile Information
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">First Name</Label>
                     <Input id="firstName" placeholder="Enter your first name" />
@@ -73,24 +93,26 @@ const SettingsPage = () => {
                   <Label htmlFor="company">Company</Label>
                   <Input id="company" placeholder="Enter your company name" />
                 </div>
-                <Button className="w-full">
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Profile Changes
-                </Button>
+                <div className="flex justify-end">
+                  <Button className="min-w-40">
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Profile Changes
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="notifications" className="space-y-6">
-            <Card>
+            <Card className="bg-card/60 backdrop-blur border-border">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Bell className="h-5 w-5 mr-2" />
                   Notification Preferences
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
+              <CardContent className="space-y-0">
+                <div className="flex items-center justify-between p-4">
                   <div className="space-y-0.5">
                     <Label>Email Notifications</Label>
                     <p className="text-sm text-muted-foreground">
@@ -100,7 +122,7 @@ const SettingsPage = () => {
                   <Switch />
                 </div>
                 <Separator />
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between p-4">
                   <div className="space-y-0.5">
                     <Label>Invoice Updates</Label>
                     <p className="text-sm text-muted-foreground">
@@ -110,7 +132,7 @@ const SettingsPage = () => {
                   <Switch defaultChecked />
                 </div>
                 <Separator />
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between p-4">
                   <div className="space-y-0.5">
                     <Label>Payment Alerts</Label>
                     <p className="text-sm text-muted-foreground">
@@ -120,7 +142,7 @@ const SettingsPage = () => {
                   <Switch defaultChecked />
                 </div>
                 <Separator />
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between p-4">
                   <div className="space-y-0.5">
                     <Label>Trading Updates</Label>
                     <p className="text-sm text-muted-foreground">
@@ -134,14 +156,14 @@ const SettingsPage = () => {
           </TabsContent>
 
           <TabsContent value="security" className="space-y-6">
-            <Card>
+            <Card className="bg-card/60 backdrop-blur border-border">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Shield className="h-5 w-5 mr-2" />
                   Security Settings
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-8">
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="currentPassword">Current Password</Label>
@@ -157,11 +179,13 @@ const SettingsPage = () => {
                     </Label>
                     <Input id="confirmPassword" type="password" />
                   </div>
-                  <Button>Update Password</Button>
+                  <div className="flex justify-end">
+                    <Button className="min-w-40">Update Password</Button>
+                  </div>
                 </div>
                 <Separator />
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between p-4 rounded-md border border-border">
                     <div className="space-y-0.5">
                       <Label>Two-Factor Authentication</Label>
                       <p className="text-sm text-muted-foreground">
@@ -170,22 +194,26 @@ const SettingsPage = () => {
                     </div>
                     <Badge variant="outline">Not Enabled</Badge>
                   </div>
-                  <Button variant="outline">Enable 2FA</Button>
+                  <div className="flex justify-end">
+                    <Button variant="outline" className="min-w-40">
+                      Enable 2FA
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="preferences" className="space-y-6">
-            <Card>
+            <Card className="bg-card/60 backdrop-blur border-border">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Globe className="h-5 w-5 mr-2" />
                   Preferences
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
+              <CardContent className="space-y-0">
+                <div className="flex items-center justify-between p-4">
                   <div className="space-y-0.5">
                     <Label>Dark Mode</Label>
                     <p className="text-sm text-muted-foreground">
@@ -195,7 +223,7 @@ const SettingsPage = () => {
                   <Switch defaultChecked />
                 </div>
                 <Separator />
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between p-4">
                   <div className="space-y-0.5">
                     <Label>Auto-save Drafts</Label>
                     <p className="text-sm text-muted-foreground">
@@ -205,7 +233,7 @@ const SettingsPage = () => {
                   <Switch defaultChecked />
                 </div>
                 <Separator />
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between p-4">
                   <div className="space-y-0.5">
                     <Label>Advanced Charts</Label>
                     <p className="text-sm text-muted-foreground">
@@ -215,7 +243,7 @@ const SettingsPage = () => {
                   <Switch />
                 </div>
                 <Separator />
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
                   <div className="space-y-2">
                     <Label>Default Currency</Label>
                     <Input defaultValue="USD" placeholder="USD" />
