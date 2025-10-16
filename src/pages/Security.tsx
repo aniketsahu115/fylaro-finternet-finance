@@ -226,7 +226,7 @@ const Security = () => {
                 </p>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-xs">
-                    security@fylaro.com
+                    security@fylarofinance.com
                   </Badge>
                   <span className="text-xs text-muted-foreground">
                     Response within 24 hours
