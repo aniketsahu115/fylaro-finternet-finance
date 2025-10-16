@@ -1,4 +1,4 @@
-# 🚀 Fylaro - Invoice Tokenization Platform on the Finternet
+# Fylaro - Invoice Tokenization Platform on the Finternet
 
 > **Revolutionary Invoice Financing Platform with Real-time Trading, Advanced Credit Scoring, and Global Finternet Integration**
 
