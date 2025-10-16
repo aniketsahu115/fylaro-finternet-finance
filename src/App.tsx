@@ -23,6 +23,10 @@ import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
 import ApiDocs from "./pages/ApiDocs";
 import Security from "./pages/Security";
+import About from "./pages/About";
+import Careers from "./pages/Careers";
+import Press from "./pages/Press";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +57,10 @@ const App = () => (
                 <Route path="/api-docs" element={<ApiDocs />} />
                 <Route path="/legal" element={<Legal />} />
                 <Route path="/security" element={<Security />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/press" element={<Press />} />
+                <Route path="/contact" element={<Contact />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
