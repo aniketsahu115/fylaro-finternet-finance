@@ -697,9 +697,12 @@ const Index = () => {
                   </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link
+                    to="/api-docs"
+                    className="hover:text-primary transition-colors"
+                  >
                     API Docs
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a href="#" className="hover:text-primary transition-colors">
