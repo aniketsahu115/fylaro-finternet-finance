@@ -22,6 +22,7 @@ import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
 import ApiDocs from "./pages/ApiDocs";
+import Security from "./pages/Security";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => (
                 <Route path="/help" element={<Help />} />
                 <Route path="/api-docs" element={<ApiDocs />} />
                 <Route path="/legal" element={<Legal />} />
+                <Route path="/security" element={<Security />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

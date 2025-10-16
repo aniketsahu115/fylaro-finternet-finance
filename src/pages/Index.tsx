@@ -705,9 +705,12 @@ const Index = () => {
                   </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link
+                    to="/security"
+                    className="hover:text-primary transition-colors"
+                  >
                     Security
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <Link
