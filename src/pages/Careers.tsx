@@ -210,9 +210,15 @@ const Careers = () => {
                         </div>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm">
-                      Apply Now
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                    <Button variant="outline" size="sm" asChild>
+                      <a
+                        href={`mailto:fylarofinance@gmail.com?subject=${encodeURIComponent(
+                          `Application for ${job.title}`
+                        )}`}
+                      >
+                        Apply Now
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </a>
                     </Button>
                   </div>
                 </CardHeader>
@@ -270,7 +276,8 @@ const Careers = () => {
                   </div>
                   <h4 className="font-semibold mb-2">Send Your Application</h4>
                   <p className="text-sm text-muted-foreground">
-                    Email your resume and cover letter to careers@fylaro.com
+                    Email your resume and cover letter to
+                    fylarofinance@gmail.com
                   </p>
                 </div>
                 <div className="text-center">
@@ -295,7 +302,7 @@ const Careers = () => {
               <div className="bg-muted/30 rounded-lg p-4 border border-border">
                 <p className="text-sm text-muted-foreground">
                   <strong>Questions?</strong> Reach out to us at
-                  careers@fylaro.com or connect with us on LinkedIn.
+                  fylarofinance@gmail.com or connect with us on LinkedIn.
                 </p>
               </div>
             </CardContent>
