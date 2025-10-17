@@ -13,7 +13,7 @@
 
 **Fylaro** is a comprehensive **invoice tokenization platform** that transforms traditional invoice financing through blockchain technology and the Finternet vision. The platform enables businesses to convert their invoices into tradeable digital assets, providing instant liquidity while offering investors diversified, verified investment opportunities.
 
-### 🎯 Vision Statement
+### Vision Statement
 
 To democratize access to working capital by creating a global, transparent, and efficient marketplace for invoice financing through tokenization and blockchain technology.
 
@@ -91,7 +91,7 @@ Fylaro demonstrates the transformative potential of the Finternet by creating a 
 - **Networks**: Ethereum, BSC, Polygon support
 - **Development**: Hardhat for testing and deployment
 
-### 🗄️ Database Schema
+###  Database Schema
 
 #### Core Models
 
@@ -149,7 +149,7 @@ Payment: {
 
 ---
 
-## 🚀 Quick Start Guide
+##  Quick Start Guide
 
 ### Prerequisites
 
