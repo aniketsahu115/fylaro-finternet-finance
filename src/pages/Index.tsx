@@ -663,36 +663,24 @@ const Index = () => {
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-3 text-muted-foreground">
                 <li>
-                  <Link
-                    to="/about"
-                    className="hover:text-primary transition-colors"
-                  >
+                  <a href="#" className="hover:text-primary transition-colors">
                     About Us
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to="/careers"
-                    className="hover:text-primary transition-colors"
-                  >
+                  <a href="#" className="hover:text-primary transition-colors">
                     Careers
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to="/press"
-                    className="hover:text-primary transition-colors"
-                  >
+                  <a href="#" className="hover:text-primary transition-colors">
                     Press
-                  </Link>
+                  </a>
                 </li>
                 <li>
-                  <Link
-                    to="/contact"
-                    className="hover:text-primary transition-colors"
-                  >
+                  <a href="#" className="hover:text-primary transition-colors">
                     Contact
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -717,12 +705,9 @@ const Index = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/security"
-                    className="hover:text-primary transition-colors"
-                  >
+                  <a href="#" className="hover:text-primary transition-colors">
                     Security
-                  </Link>
+                  </a>
                 </li>
                 <li>
                   <Link
