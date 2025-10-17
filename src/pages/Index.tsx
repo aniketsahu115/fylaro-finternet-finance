@@ -738,7 +738,7 @@ const Index = () => {
 
           <div className="pt-8 border-t border-border/50 flex flex-col lg:flex-row justify-between items-center gap-4">
             <p className="text-muted-foreground text-sm">
-              © 2024 Fylaro. All rights reserved. Licensed financial technology
+              © 2025 Fylaro. All rights reserved. Licensed financial technology
               platform.
             </p>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
