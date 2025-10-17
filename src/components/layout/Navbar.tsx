@@ -72,6 +72,23 @@ const Navbar = () => {
 
           {/* Right Side Controls */}
           <div className="flex items-center space-x-4">
+            {/* Join Waitlist */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="hidden md:flex navbar-button"
+              asChild
+            >
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdwA6QzkyjYxhfNupg0_lg6IX-UZr3i01FwM8WwAZSlp6V2KQ/viewform?usp=dialog"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Join the early access waitlist"
+              >
+                Join Waitlist
+              </a>
+            </Button>
+
             {/* Search */}
             <Button
               variant="ghost"
