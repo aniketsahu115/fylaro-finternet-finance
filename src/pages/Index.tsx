@@ -625,36 +625,36 @@ const Index = () => {
               <h4 className="font-semibold mb-4">Platform</h4>
               <ul className="space-y-3 text-muted-foreground">
                 <li>
-                  <a
-                    href="/marketplace"
+                  <Link
+                    to="/marketplace"
                     className="hover:text-primary transition-colors"
                   >
                     Marketplace
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/dashboard"
+                  <Link
+                    to="/dashboard"
                     className="hover:text-primary transition-colors"
                   >
                     Dashboard
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/portfolio"
+                  <Link
+                    to="/portfolio"
                     className="hover:text-primary transition-colors"
                   >
                     Portfolio
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="/trading"
+                  <Link
+                    to="/trading"
                     className="hover:text-primary transition-colors"
                   >
                     Trading
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -663,24 +663,36 @@ const Index = () => {
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-3 text-muted-foreground">
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link
+                    to="/about"
+                    className="hover:text-primary transition-colors"
+                  >
                     About Us
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link
+                    to="/careers"
+                    className="hover:text-primary transition-colors"
+                  >
                     Careers
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link
+                    to="/press"
+                    className="hover:text-primary transition-colors"
+                  >
                     Press
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link
+                    to="/contact"
+                    className="hover:text-primary transition-colors"
+                  >
                     Contact
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -705,9 +717,12 @@ const Index = () => {
                   </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-primary transition-colors">
+                  <Link
+                    to="/security"
+                    className="hover:text-primary transition-colors"
+                  >
                     Security
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <Link
