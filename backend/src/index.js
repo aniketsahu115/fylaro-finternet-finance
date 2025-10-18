@@ -127,6 +127,13 @@ app.use("/api/documents", require("./routes/documents"));
 app.use("/api/credit-scoring", require("./routes/creditScoring"));
 app.use("/api/websocket", require("./routes/websocket"));
 
+// Finternet integration routes
+app.use("/api/finternet-sso", require("./routes/finternetSSO"));
+app.use("/api/compliance", require("./routes/compliance"));
+app.use("/api/cross-border", require("./routes/crossBorder"));
+app.use("/api/finternet-bridge", require("./routes/finternetBridge"));
+app.use("/api/universal-assets", require("./routes/universalAssets"));
+
 // API route registry for docs
 app.get("/api/docs/routes", (req, res) => {
   const routes = [];
