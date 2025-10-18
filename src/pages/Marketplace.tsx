@@ -14,6 +14,7 @@ import { toast } from "@/components/ui/use-toast";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import InvestmentAnalysis from "@/components/features/InvestmentAnalysis";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import {
   Search,
   Filter,
@@ -27,7 +28,10 @@ import {
 
 const Marketplace = () => {
   const navigate = useNavigate();
-  const invoiceListings = [
+  const [displayedListings, setDisplayedListings] = useState(4);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const allInvoiceListings = [
     {
       id: "INV-001",
       company: "TechFlow Solutions",
@@ -84,7 +88,92 @@ const Marketplace = () => {
       daysLeft: 28,
       verified: true,
     },
+    {
+      id: "INV-005",
+      company: "LogiTech Systems",
+      amount: 234000,
+      currency: "USD",
+      dueDate: "2024-06-15",
+      funded: 45,
+      creditScore: 823,
+      industry: "Technology",
+      riskLevel: "Low",
+      expectedReturn: 9.1,
+      daysLeft: 35,
+      verified: true,
+    },
+    {
+      id: "INV-006",
+      company: "AgriCorp Ltd",
+      amount: 187500,
+      currency: "USD",
+      dueDate: "2024-04-30",
+      funded: 67,
+      creditScore: 756,
+      industry: "Agriculture",
+      riskLevel: "Medium",
+      expectedReturn: 11.8,
+      daysLeft: 18,
+      verified: true,
+    },
+    {
+      id: "INV-007",
+      company: "FinanceFlow Inc",
+      amount: 312000,
+      currency: "USD",
+      dueDate: "2024-07-20",
+      funded: 23,
+      creditScore: 889,
+      industry: "Finance",
+      riskLevel: "Low",
+      expectedReturn: 6.9,
+      daysLeft: 42,
+      verified: true,
+    },
+    {
+      id: "INV-008",
+      company: "Manufacturing Plus",
+      amount: 145000,
+      currency: "USD",
+      dueDate: "2024-03-25",
+      funded: 89,
+      creditScore: 798,
+      industry: "Manufacturing",
+      riskLevel: "Medium",
+      expectedReturn: 10.4,
+      daysLeft: 12,
+      verified: false,
+    },
   ];
+
+  const invoiceListings = allInvoiceListings.slice(0, displayedListings);
+
+  const handleLoadMore = async () => {
+    setIsLoading(true);
+    try {
+      // Simulate API call delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const newCount = Math.min(
+        displayedListings + 4,
+        allInvoiceListings.length
+      );
+      setDisplayedListings(newCount);
+
+      toast({
+        title: "More Listings Loaded",
+        description: `Showing ${newCount} of ${allInvoiceListings.length} available listings`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error Loading Listings",
+        description: "Failed to load more listings. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -324,22 +413,18 @@ const Marketplace = () => {
         />
 
         {/* Load More */}
-        <div className="text-center pt-6">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={() => {
-              toast({
-                title: "Loading More Listings",
-                description: "Fetching additional investment opportunities...",
-              });
-              // In a real app, this would load more data from the API
-              console.log("Loading more marketplace listings");
-            }}
-          >
-            Load More Listings
-          </Button>
-        </div>
+        {displayedListings < allInvoiceListings.length && (
+          <div className="text-center pt-6">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={handleLoadMore}
+              disabled={isLoading}
+            >
+              {isLoading ? "Loading..." : "Load More Listings"}
+            </Button>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );
