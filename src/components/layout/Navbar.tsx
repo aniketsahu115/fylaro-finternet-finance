@@ -6,11 +6,13 @@ import { useTheme } from "next-themes";
 import { useWallet } from "@/hooks/useWallet";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import SearchModal from "@/components/features/SearchModal";
+import NotificationDropdown from "@/components/features/NotificationDropdown";
 import LanguageSelector from "@/components/features/LanguageSelector";
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const { isConnected, isOnBSC, switchToBSC } = useWallet();
 
   // Keyboard shortcut for search (Ctrl+K or Cmd+K)
@@ -118,14 +120,10 @@ const Navbar = () => {
             <LanguageSelector />
 
             {/* Notifications */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="relative navbar-button"
-            >
-              <Bell className="h-5 w-5" />
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></div>
-            </Button>
+            <NotificationDropdown
+              isOpen={isNotificationOpen}
+              onToggle={() => setIsNotificationOpen(!isNotificationOpen)}
+            />
 
             {/* Wallet Connection (RainbowKit) */}
             <div className="flex items-center space-x-2">
