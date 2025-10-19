@@ -14,6 +14,8 @@ const IPFSService = require("./services/ipfsService");
 const AdvancedCreditScoring = require("./services/advancedCreditScoring");
 const OrderMatchingEngine = require("./services/orderMatchingEngine");
 const BlockchainIntegrationService = require("./services/blockchainIntegrationService");
+const PaymentProcessorService = require("./services/paymentProcessor");
+const DocumentManagerService = require("./services/documentManager");
 
 const app = express();
 const server = http.createServer(app);
@@ -43,6 +45,8 @@ const ipfsService = new IPFSService();
 const creditScoring = new AdvancedCreditScoring();
 const orderMatchingEngine = new OrderMatchingEngine(websocketService);
 const blockchainService = new BlockchainIntegrationService();
+const paymentProcessor = new PaymentProcessorService();
+const documentManager = new DocumentManagerService();
 
 // Make services available to routes
 app.locals.websocketService = websocketService;
@@ -50,6 +54,8 @@ app.locals.ipfsService = ipfsService;
 app.locals.creditScoring = creditScoring;
 app.locals.orderMatchingEngine = orderMatchingEngine;
 app.locals.blockchainService = blockchainService;
+app.locals.paymentProcessor = paymentProcessor;
+app.locals.documentManager = documentManager;
 
 // Security middleware
 app.use(

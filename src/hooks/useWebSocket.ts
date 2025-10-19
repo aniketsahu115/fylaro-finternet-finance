@@ -1,291 +1,329 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { webSocketService } from '../services/webSocketService';
+// WebSocket hook for real-time updates
+import { useEffect, useRef, useState } from "react";
+
+interface WebSocketMessage {
+  type: string;
+  data: any;
+  timestamp: number;
+}
 
 interface UseWebSocketOptions {
-  autoConnect?: boolean;
-  userId?: string;
-  tradingPairs?: string[];
+  url?: string;
+  reconnectInterval?: number;
+  maxReconnectAttempts?: number;
+  onMessage?: (message: WebSocketMessage) => void;
+  onConnect?: () => void;
+  onDisconnect?: () => void;
+  onError?: (error: Event) => void;
 }
 
-interface WebSocketHookReturn {
-  isConnected: boolean;
-  connectionStats: any;
-  lastMessage: any;
-  error: string | null;
-  sendMessage: (event: string, data: any) => void;
-  subscribe: (tradingPair: string) => void;
-  unsubscribe: (tradingPair: string) => void;
-  connect: () => Promise<boolean>;
-  disconnect: () => void;
-  forceReconnect: () => void;
-}
+export const useWebSocket = (options: UseWebSocketOptions = {}) => {
+  const {
+    url = import.meta.env.VITE_WS_URL || "ws://localhost:3001",
+    reconnectInterval = 5000,
+    maxReconnectAttempts = 5,
+    onMessage,
+    onConnect,
+    onDisconnect,
+    onError,
+  } = options;
 
-/**
- * React hook for WebSocket functionality
- */
-export const useWebSocket = (options: UseWebSocketOptions = {}): WebSocketHookReturn => {
-  const { autoConnect = true, userId, tradingPairs = [] } = options;
-  
   const [isConnected, setIsConnected] = useState(false);
-  const [connectionStats, setConnectionStats] = useState(webSocketService.getStats());
-  const [lastMessage, setLastMessage] = useState<any>(null);
+  const [connectionStatus, setConnectionStatus] = useState<
+    "connecting" | "connected" | "disconnected" | "error"
+  >("disconnected");
+  const [lastMessage, setLastMessage] = useState<WebSocketMessage | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
-  const isInitialized = useRef(false);
 
-  // Connection status handler
-  const handleConnection = useCallback(() => {
-    setIsConnected(true);
-    setConnectionStats(webSocketService.getStats());
+  const wsRef = useRef<WebSocket | null>(null);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const reconnectAttemptsRef = useRef(0);
+  const shouldReconnectRef = useRef(true);
+
+  const connect = () => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      return;
+    }
+
+    setConnectionStatus("connecting");
     setError(null);
-    
-    // Join user room if userId provided
-    if (userId) {
-      webSocketService.joinUserRoom(userId);
-    }
-    
-    // Subscribe to trading pairs
-    tradingPairs.forEach(pair => {
-      webSocketService.subscribeTo(pair);
-    });
-  }, [userId, tradingPairs]);
 
-  // Disconnection handler
-  const handleDisconnection = useCallback(() => {
-    setIsConnected(false);
-    setConnectionStats(webSocketService.getStats());
-  }, []);
+    try {
+      const ws = new WebSocket(url);
+      wsRef.current = ws;
 
-  // Message handler
-  const handleMessage = useCallback((data: any) => {
-    setLastMessage({
-      ...data,
-      timestamp: new Date().toISOString()
-    });
-  }, []);
+      ws.onopen = () => {
+        setIsConnected(true);
+        setConnectionStatus("connected");
+        setError(null);
+        reconnectAttemptsRef.current = 0;
+        onConnect?.();
+      };
 
-  // Error handler
-  const handleError = useCallback((errorData: any) => {
-    setError(errorData.message || 'WebSocket error occurred');
-    console.error('WebSocket error:', errorData);
-  }, []);
-
-  // Initialize WebSocket connection
-  useEffect(() => {
-    if (!isInitialized.current && autoConnect) {
-      isInitialized.current = true;
-      
-      // Set up event listeners
-      webSocketService.on('connection_established', handleConnection);
-      webSocketService.on('connection_lost', handleDisconnection);
-      webSocketService.on('notification', handleMessage);
-      webSocketService.on('error', handleError);
-      
-      // Initialize connection
-      webSocketService.initialize().then((connected) => {
-        if (connected) {
-          handleConnection();
-        } else {
-          setError('Failed to establish WebSocket connection');
+      ws.onmessage = (event) => {
+        try {
+          const message: WebSocketMessage = JSON.parse(event.data);
+          setLastMessage(message);
+          onMessage?.(message);
+        } catch (err) {
+          console.error("Failed to parse WebSocket message:", err);
         }
-      });
+      };
+
+      ws.onclose = (event) => {
+        setIsConnected(false);
+        setConnectionStatus("disconnected");
+        onDisconnect?.();
+
+        if (
+          shouldReconnectRef.current &&
+          reconnectAttemptsRef.current < maxReconnectAttempts
+        ) {
+          reconnectAttemptsRef.current++;
+          reconnectTimeoutRef.current = setTimeout(() => {
+            connect();
+          }, reconnectInterval);
+        }
+      };
+
+      ws.onerror = (event) => {
+        setConnectionStatus("error");
+        setError("WebSocket connection error");
+        onError?.(event);
+      };
+    } catch (err) {
+      setError("Failed to create WebSocket connection");
+      setConnectionStatus("error");
+    }
+  };
+
+  const disconnect = () => {
+    shouldReconnectRef.current = false;
+
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
     }
 
-    // Cleanup function
-    return () => {
-      webSocketService.off('connection_established', handleConnection);
-      webSocketService.off('connection_lost', handleDisconnection);
-      webSocketService.off('notification', handleMessage);
-      webSocketService.off('error', handleError);
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+    }
+
+    setIsConnected(false);
+    setConnectionStatus("disconnected");
+  };
+
+  const sendMessage = (message: any) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify(message));
+      return true;
+    }
+    return false;
+  };
+
+  const subscribe = (channel: string, callback?: (data: any) => void) => {
+    const message = {
+      type: "subscribe",
+      channel,
+      timestamp: Date.now(),
     };
-  }, [autoConnect, handleConnection, handleDisconnection, handleMessage, handleError]);
 
-  // Update connection status
+    if (callback) {
+      const originalOnMessage = onMessage;
+      onMessage = (msg) => {
+        if (msg.type === channel) {
+          callback(msg.data);
+        }
+        originalOnMessage?.(msg);
+      };
+    }
+
+    return sendMessage(message);
+  };
+
+  const unsubscribe = (channel: string) => {
+    const message = {
+      type: "unsubscribe",
+      channel,
+      timestamp: Date.now(),
+    };
+
+    return sendMessage(message);
+  };
+
+  // Auto-connect on mount
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIsConnected(webSocketService.isConnected());
-      setConnectionStats(webSocketService.getStats());
-    }, 1000);
+    connect();
 
-    return () => clearInterval(interval);
+    return () => {
+      disconnect();
+    };
   }, []);
 
-  // Functions to return
-  const sendMessage = useCallback((event: string, data: any) => {
-    try {
-      webSocketService.send(event, data);
-    } catch (error) {
-      console.error('Failed to send message:', error);
-      setError('Failed to send message');
-    }
-  }, []);
-
-  const subscribe = useCallback((tradingPair: string) => {
-    webSocketService.subscribeTo(tradingPair);
-  }, []);
-
-  const unsubscribe = useCallback((tradingPair: string) => {
-    webSocketService.unsubscribeFrom(tradingPair);
-  }, []);
-
-  const connect = useCallback(async (): Promise<boolean> => {
-    try {
-      const connected = await webSocketService.initialize();
-      if (connected) {
-        handleConnection();
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
       }
-      return connected;
-    } catch (error) {
-      console.error('Failed to connect:', error);
-      setError('Failed to connect to WebSocket');
-      return false;
-    }
-  }, [handleConnection]);
-
-  const disconnect = useCallback(() => {
-    webSocketService.disconnect();
-    handleDisconnection();
-  }, [handleDisconnection]);
-
-  const forceReconnect = useCallback(() => {
-    webSocketService.forceReconnect();
+    };
   }, []);
 
   return {
     isConnected,
-    connectionStats,
+    connectionStatus,
     lastMessage,
     error,
+    connect,
+    disconnect,
     sendMessage,
     subscribe,
     unsubscribe,
-    connect,
-    disconnect,
-    forceReconnect
   };
 };
 
-/**
- * Hook for order book real-time updates
- */
-export const useOrderBook = (tradingPair: string) => {
-  const [orderBook, setOrderBook] = useState({ bids: [], asks: [] });
-  const [isLoading, setIsLoading] = useState(true);
-  
-  const { isConnected, subscribe, unsubscribe } = useWebSocket();
+// Specific hooks for different types of real-time updates
+export const useInvoiceUpdates = () => {
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
+
+  const { subscribe, unsubscribe } = useWebSocket({
+    onMessage: (message) => {
+      switch (message.type) {
+        case "invoice_status_update":
+          setInvoices((prev) =>
+            prev.map((invoice) =>
+              invoice.id === message.data.invoiceId
+                ? { ...invoice, status: message.data.status }
+                : invoice
+            )
+          );
+          break;
+        case "invoice_verification_complete":
+          setNotifications((prev) => [
+            ...prev,
+            {
+              id: Date.now(),
+              type: "success",
+              title: "Invoice Verified",
+              message: `Invoice ${message.data.invoiceId} has been verified`,
+              timestamp: Date.now(),
+            },
+          ]);
+          break;
+        case "payment_received":
+          setNotifications((prev) => [
+            ...prev,
+            {
+              id: Date.now(),
+              type: "success",
+              title: "Payment Received",
+              message: `Payment of $${message.data.amount} received for invoice ${message.data.invoiceId}`,
+              timestamp: Date.now(),
+            },
+          ]);
+          break;
+      }
+    },
+  });
 
   useEffect(() => {
-    if (isConnected && tradingPair) {
-      subscribe(tradingPair);
-      
-      const handleOrderBookUpdate = (data: any) => {
-        if (data.tradingPair === tradingPair) {
-          setOrderBook(data.orderBook);
-          setIsLoading(false);
-        }
-      };
+    subscribe("invoice_updates");
+    return () => unsubscribe("invoice_updates");
+  }, []);
 
-      webSocketService.on('order_book_update', handleOrderBookUpdate);
-
-      return () => {
-        unsubscribe(tradingPair);
-        webSocketService.off('order_book_update', handleOrderBookUpdate);
-      };
-    }
-  }, [isConnected, tradingPair, subscribe, unsubscribe]);
-
-  return { orderBook, isLoading };
+  return { invoices, notifications };
 };
 
-/**
- * Hook for real-time trade updates
- */
-export const useTrades = (tradingPair?: string) => {
-  const [trades, setTrades] = useState<any[]>([]);
-  const [newTrade, setNewTrade] = useState<any>(null);
-  
-  const { isConnected } = useWebSocket();
+export const useTradingUpdates = () => {
+  const [orderBook, setOrderBook] = useState<any>({ bids: [], asks: [] });
+  const [recentTrades, setRecentTrades] = useState<any[]>([]);
+  const [marketStats, setMarketStats] = useState<any>({});
+
+  const { subscribe, unsubscribe } = useWebSocket({
+    onMessage: (message) => {
+      switch (message.type) {
+        case "order_book_update":
+          setOrderBook(message.data);
+          break;
+        case "trade_executed":
+          setRecentTrades((prev) => [message.data, ...prev.slice(0, 49)]);
+          break;
+        case "market_stats_update":
+          setMarketStats(message.data);
+          break;
+      }
+    },
+  });
 
   useEffect(() => {
-    if (isConnected) {
-      const handleTradeExecuted = (data: any) => {
-        if (!tradingPair || data.tradingPair === tradingPair) {
-          setNewTrade(data);
-          setTrades(prev => [data, ...prev.slice(0, 49)]); // Keep last 50 trades
-        }
-      };
+    subscribe("trading_updates");
+    return () => unsubscribe("trading_updates");
+  }, []);
 
-      webSocketService.on('trade_executed', handleTradeExecuted);
-
-      return () => {
-        webSocketService.off('trade_executed', handleTradeExecuted);
-      };
-    }
-  }, [isConnected, tradingPair]);
-
-  return { trades, newTrade };
+  return { orderBook, recentTrades, marketStats };
 };
 
-/**
- * Hook for portfolio real-time updates
- */
-export const usePortfolioUpdates = (userId: string) => {
-  const [portfolioUpdate, setPortfolioUpdate] = useState<any>(null);
-  
-  const { isConnected } = useWebSocket({ userId });
+export const usePaymentUpdates = () => {
+  const [payments, setPayments] = useState<any[]>([]);
+  const [settlements, setSettlements] = useState<any[]>([]);
+
+  const { subscribe, unsubscribe } = useWebSocket({
+    onMessage: (message) => {
+      switch (message.type) {
+        case "payment_status_update":
+          setPayments((prev) =>
+            prev.map((payment) =>
+              payment.id === message.data.paymentId
+                ? { ...payment, status: message.data.status }
+                : payment
+            )
+          );
+          break;
+        case "settlement_completed":
+          setSettlements((prev) => [message.data, ...prev]);
+          break;
+      }
+    },
+  });
 
   useEffect(() => {
-    if (isConnected) {
-      const handlePortfolioUpdate = (data: any) => {
-        setPortfolioUpdate({
-          ...data,
-          timestamp: new Date().toISOString()
-        });
-      };
+    subscribe("payment_updates");
+    return () => unsubscribe("payment_updates");
+  }, []);
 
-      webSocketService.on('invoice_status_update', handlePortfolioUpdate);
-      webSocketService.on('payment_received', handlePortfolioUpdate);
-      webSocketService.on('credit_score_update', handlePortfolioUpdate);
-
-      return () => {
-        webSocketService.off('invoice_status_update', handlePortfolioUpdate);
-        webSocketService.off('payment_received', handlePortfolioUpdate);
-        webSocketService.off('credit_score_update', handlePortfolioUpdate);
-      };
-    }
-  }, [isConnected]);
-
-  return { portfolioUpdate };
+  return { payments, settlements };
 };
 
-/**
- * Hook for market data real-time updates
- */
-export const useMarketData = () => {
-  const [marketData, setMarketData] = useState<any>({});
-  const [isLoading, setIsLoading] = useState(true);
-  
-  const { isConnected } = useWebSocket();
+export const useCreditScoreUpdates = () => {
+  const [creditScore, setCreditScore] = useState<number | null>(null);
+  const [scoreHistory, setScoreHistory] = useState<any[]>([]);
+
+  const { subscribe, unsubscribe } = useWebSocket({
+    onMessage: (message) => {
+      switch (message.type) {
+        case "credit_score_update":
+          setCreditScore(message.data.score);
+          setScoreHistory((prev) => [
+            ...prev,
+            {
+              score: message.data.score,
+              change: message.data.change,
+              reason: message.data.reason,
+              timestamp: Date.now(),
+            },
+          ]);
+          break;
+      }
+    },
+  });
 
   useEffect(() => {
-    if (isConnected) {
-      const handleMarketDataUpdate = (data: any) => {
-        setMarketData(prev => ({
-          ...prev,
-          [data.tradingPair]: data
-        }));
-        setIsLoading(false);
-      };
+    subscribe("credit_score_updates");
+    return () => unsubscribe("credit_score_updates");
+  }, []);
 
-      webSocketService.on('market_data_update', handleMarketDataUpdate);
-
-      return () => {
-        webSocketService.off('market_data_update', handleMarketDataUpdate);
-      };
-    }
-  }, [isConnected]);
-
-  return { marketData, isLoading };
+  return { creditScore, scoreHistory };
 };
 
 export default useWebSocket;

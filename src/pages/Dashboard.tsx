@@ -6,6 +6,9 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import CreditScoring from "@/components/features/CreditScoring";
 import FinternInteractiveDemo from "@/components/features/FinternInteractiveDemo";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { invoiceAPI, analyticsAPI } from "@/services/api";
+import { useInvoiceUpdates } from "@/hooks/useWebSocket";
 import {
   DollarSign,
   TrendingUp,
@@ -16,67 +19,117 @@ import {
   Upload,
   Eye,
   MoreHorizontal,
+  Loader2,
 } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const stats = [
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState([
     {
       title: "Total Capital Raised",
-      value: "$2,847,563",
-      change: "+12.5%",
+      value: "$0",
+      change: "+0%",
       trend: "up",
       icon: DollarSign,
     },
     {
       title: "Active Invoices",
-      value: "23",
-      change: "+3",
+      value: "0",
+      change: "+0",
       trend: "up",
       icon: FileText,
     },
     {
       title: "Success Rate",
-      value: "94.7%",
-      change: "+2.1%",
+      value: "0%",
+      change: "+0%",
       trend: "up",
       icon: TrendingUp,
     },
     {
       title: "Active Investors",
-      value: "156",
-      change: "+8",
+      value: "0",
+      change: "+0",
       trend: "up",
       icon: Users,
     },
-  ];
+  ]);
+  const [recentInvoices, setRecentInvoices] = useState<any[]>([]);
+  const [analytics, setAnalytics] = useState<any>(null);
 
-  const recentInvoices = [
-    {
-      id: "INV-001",
-      company: "TechCorp Ltd",
-      amount: "$125,000",
-      status: "Active",
-      funded: 85,
-      daysLeft: 12,
-    },
-    {
-      id: "INV-002",
-      company: "BuildCo Inc",
-      amount: "$89,500",
-      status: "Funded",
-      funded: 100,
-      daysLeft: 0,
-    },
-    {
-      id: "INV-003",
-      company: "RetailMax",
-      amount: "$67,800",
-      status: "Active",
-      funded: 42,
-      daysLeft: 18,
-    },
-  ];
+  // Real-time updates
+  const { invoices: realTimeInvoices, notifications } = useInvoiceUpdates();
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch analytics data
+      const analyticsResponse = await analyticsAPI.getOverview();
+      setAnalytics(analyticsResponse.data);
+
+      // Fetch recent invoices
+      const invoicesResponse = await invoiceAPI.getMyInvoices({ limit: 5 });
+      setRecentInvoices(invoicesResponse.data.invoices || []);
+
+      // Update stats with real data
+      if (analyticsResponse.data) {
+        setStats((prev) => [
+          {
+            ...prev[0],
+            value: `$${
+              analyticsResponse.data.totalCapitalRaised?.toLocaleString() || "0"
+            }`,
+            change: `+${analyticsResponse.data.capitalGrowth || 0}%`,
+          },
+          {
+            ...prev[1],
+            value: `${analyticsResponse.data.activeInvoices || 0}`,
+            change: `+${analyticsResponse.data.newInvoices || 0}`,
+          },
+          {
+            ...prev[2],
+            value: `${analyticsResponse.data.successRate || 0}%`,
+            change: `+${analyticsResponse.data.successRateChange || 0}%`,
+          },
+          {
+            ...prev[3],
+            value: `${analyticsResponse.data.activeInvestors || 0}`,
+            change: `+${analyticsResponse.data.newInvestors || 0}`,
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error("Failed to fetch dashboard data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Update invoices when real-time data changes
+  useEffect(() => {
+    if (realTimeInvoices.length > 0) {
+      setRecentInvoices(realTimeInvoices);
+    }
+  }, [realTimeInvoices]);
+
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p className="text-muted-foreground">Loading dashboard data...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>

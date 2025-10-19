@@ -14,7 +14,9 @@ import { toast } from "@/components/ui/use-toast";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import InvestmentAnalysis from "@/components/features/InvestmentAnalysis";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { marketplaceAPI } from "@/services/api";
+import { useTradingUpdates } from "@/hooks/useWebSocket";
 import {
   Search,
   Filter,
@@ -24,155 +26,95 @@ import {
   Star,
   Shield,
   Target,
+  Loader2,
 } from "lucide-react";
 
 const Marketplace = () => {
   const navigate = useNavigate();
-  const [displayedListings, setDisplayedListings] = useState(4);
-  const [isLoading, setIsLoading] = useState(false);
+  const [listings, setListings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [filters, setFilters] = useState({
+    industry: "",
+    riskLevel: "",
+    minAmount: "",
+    maxAmount: "",
+    search: "",
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 20,
+    total: 0,
+    hasMore: true,
+  });
 
-  const allInvoiceListings = [
-    {
-      id: "INV-001",
-      company: "TechFlow Solutions",
-      amount: 125000,
-      currency: "USD",
-      dueDate: "2024-03-15",
-      funded: 78,
-      creditScore: 847,
-      industry: "Technology",
-      riskLevel: "Low",
-      expectedReturn: 8.5,
-      daysLeft: 14,
-      verified: true,
-    },
-    {
-      id: "INV-002",
-      company: "Green Energy Corp",
-      amount: 89500,
-      currency: "USD",
-      dueDate: "2024-04-22",
-      funded: 34,
-      creditScore: 792,
-      industry: "Energy",
-      riskLevel: "Medium",
-      expectedReturn: 12.3,
-      daysLeft: 21,
-      verified: true,
-    },
-    {
-      id: "INV-003",
-      company: "RetailMax Inc",
-      amount: 67800,
-      currency: "USD",
-      dueDate: "2024-02-28",
-      funded: 92,
-      creditScore: 734,
-      industry: "Retail",
-      riskLevel: "Medium",
-      expectedReturn: 9.7,
-      daysLeft: 8,
-      verified: false,
-    },
-    {
-      id: "INV-004",
-      company: "MedTech Innovations",
-      amount: 156000,
-      currency: "USD",
-      dueDate: "2024-05-10",
-      funded: 12,
-      creditScore: 901,
-      industry: "Healthcare",
-      riskLevel: "Low",
-      expectedReturn: 7.2,
-      daysLeft: 28,
-      verified: true,
-    },
-    {
-      id: "INV-005",
-      company: "LogiTech Systems",
-      amount: 234000,
-      currency: "USD",
-      dueDate: "2024-06-15",
-      funded: 45,
-      creditScore: 823,
-      industry: "Technology",
-      riskLevel: "Low",
-      expectedReturn: 9.1,
-      daysLeft: 35,
-      verified: true,
-    },
-    {
-      id: "INV-006",
-      company: "AgriCorp Ltd",
-      amount: 187500,
-      currency: "USD",
-      dueDate: "2024-04-30",
-      funded: 67,
-      creditScore: 756,
-      industry: "Agriculture",
-      riskLevel: "Medium",
-      expectedReturn: 11.8,
-      daysLeft: 18,
-      verified: true,
-    },
-    {
-      id: "INV-007",
-      company: "FinanceFlow Inc",
-      amount: 312000,
-      currency: "USD",
-      dueDate: "2024-07-20",
-      funded: 23,
-      creditScore: 889,
-      industry: "Finance",
-      riskLevel: "Low",
-      expectedReturn: 6.9,
-      daysLeft: 42,
-      verified: true,
-    },
-    {
-      id: "INV-008",
-      company: "Manufacturing Plus",
-      amount: 145000,
-      currency: "USD",
-      dueDate: "2024-03-25",
-      funded: 89,
-      creditScore: 798,
-      industry: "Manufacturing",
-      riskLevel: "Medium",
-      expectedReturn: 10.4,
-      daysLeft: 12,
-      verified: false,
-    },
-  ];
+  // Real-time updates
+  const { orderBook, recentTrades, marketStats } = useTradingUpdates();
 
-  const invoiceListings = allInvoiceListings.slice(0, displayedListings);
+  useEffect(() => {
+    fetchListings();
+  }, [filters, pagination.page]);
 
-  const handleLoadMore = async () => {
-    setIsLoading(true);
+  const fetchListings = async () => {
     try {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (pagination.page === 1) {
+        setLoading(true);
+      } else {
+        setIsLoadingMore(true);
+      }
 
-      const newCount = Math.min(
-        displayedListings + 4,
-        allInvoiceListings.length
-      );
-      setDisplayedListings(newCount);
+      const params = {
+        page: pagination.page,
+        limit: pagination.limit,
+        ...filters,
+      };
 
-      toast({
-        title: "More Listings Loaded",
-        description: `Showing ${newCount} of ${allInvoiceListings.length} available listings`,
-      });
+      const response = await marketplaceAPI.getListings(params);
+      const newListings = response.data.listings || [];
+
+      if (pagination.page === 1) {
+        setListings(newListings);
+      } else {
+        setListings((prev) => [...prev, ...newListings]);
+      }
+
+      setPagination((prev) => ({
+        ...prev,
+        total: response.data.total || 0,
+        hasMore: newListings.length === pagination.limit,
+      }));
     } catch (error) {
+      console.error("Failed to fetch listings:", error);
       toast({
-        title: "Error Loading Listings",
-        description: "Failed to load more listings. Please try again.",
+        title: "Error",
+        description: "Failed to load marketplace listings",
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
+      setLoading(false);
+      setIsLoadingMore(false);
     }
+  };
+
+  const handleLoadMore = async () => {
+    if (!pagination.hasMore || isLoadingMore) return;
+
+    setPagination((prev) => ({
+      ...prev,
+      page: prev.page + 1,
+    }));
+  };
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setPagination((prev) => ({ ...prev, page: 1 }));
+  };
+
+  const handleSearch = (value: string) => {
+    setFilters((prev) => ({ ...prev, search: value }));
+    setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
   const formatAmount = (amount: number) => {
