@@ -133,6 +133,9 @@ app.use("/api/documents", require("./routes/documents"));
 app.use("/api/credit-scoring", require("./routes/creditScoring"));
 app.use("/api/websocket", require("./routes/websocket"));
 
+// AI-powered verification routes
+app.use("/api/ai-verification", require("./routes/aiVerification"));
+
 // Finternet integration routes
 app.use("/api/finternet-sso", require("./routes/finternetSSO"));
 app.use("/api/compliance", require("./routes/compliance"));
