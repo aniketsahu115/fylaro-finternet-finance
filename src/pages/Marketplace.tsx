@@ -95,9 +95,11 @@ const mockListings: Invoice[] = [
 ];
 
 const Marketplace = () => {
+  console.log("Marketplace component rendering...");
+  
   const navigate = useNavigate();
-  const [listings, setListings] = useState<Invoice[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [listings, setListings] = useState<Invoice[]>(mockListings);
+  const [loading, setLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [filters, setFilters] = useState({
     industry: "",
@@ -111,14 +113,36 @@ const Marketplace = () => {
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 20,
-    total: 0,
-    hasMore: true,
+    total: mockListings.length,
+    hasMore: false,
   });
 
-  // Real-time updates
-  const { orderBook, recentTrades, marketStats } = useTradingUpdates();
+  // Real-time updates - wrapped in try-catch to prevent crashes
+  let orderBook = { bids: [], asks: [] };
+  let recentTrades: unknown[] = [];
+  let marketStats = {};
+  
+  try {
+    const tradingData = useTradingUpdates();
+    orderBook = tradingData.orderBook;
+    recentTrades = tradingData.recentTrades;
+    marketStats = tradingData.marketStats;
+  } catch (error) {
+    console.warn("Trading updates hook failed:", error);
+  }
 
   const fetchListings = useCallback(async () => {
+    console.log("Fetching listings...");
+    // Temporarily disabled API call - just use mock data
+    setListings(mockListings);
+    setPagination((prev) => ({
+      ...prev,
+      total: mockListings.length,
+      hasMore: false,
+    }));
+    setLoading(false);
+    
+    /* Original API call - commented out for debugging
     try {
       if (pagination.page === 1) {
         setLoading(true);
@@ -174,7 +198,8 @@ const Marketplace = () => {
       setLoading(false);
       setIsLoadingMore(false);
     }
-  }, [filters, pagination.page, pagination.limit]);
+    */
+  }, []);
 
   useEffect(() => {
     fetchListings();
