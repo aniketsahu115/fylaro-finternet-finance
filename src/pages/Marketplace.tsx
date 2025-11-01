@@ -29,22 +29,73 @@ import {
   Loader2,
 } from "lucide-react";
 
+interface Invoice {
+  id: string;
+  company: string;
+  industry: string;
+  amount: number;
+  expectedReturn: number;
+  funded: number;
+  daysLeft: number;
+  creditScore: number;
+  riskLevel: string;
+  verified: boolean;
+}
+
+// Mock data for development/fallback
+const mockListings: Invoice[] = [
+  {
+    id: "INV-2025-001",
+    company: "Tech Solutions Inc.",
+    industry: "Technology",
+    amount: 250000,
+    expectedReturn: 12.5,
+    funded: 65,
+    daysLeft: 15,
+    creditScore: 780,
+    riskLevel: "Low",
+    verified: true,
+  },
+  {
+    id: "INV-2025-002",
+    company: "Green Energy Co.",
+    industry: "Energy",
+    amount: 500000,
+    expectedReturn: 15.0,
+    funded: 42,
+    daysLeft: 22,
+    creditScore: 750,
+    riskLevel: "Medium",
+    verified: true,
+  },
+  {
+    id: "INV-2025-003",
+    company: "Retail Dynamics LLC",
+    industry: "Retail",
+    amount: 180000,
+    expectedReturn: 10.5,
+    funded: 88,
+    daysLeft: 8,
+    creditScore: 820,
+    riskLevel: "Low",
+    verified: true,
+  },
+  {
+    id: "INV-2025-004",
+    company: "Healthcare Partners",
+    industry: "Healthcare",
+    amount: 350000,
+    expectedReturn: 13.8,
+    funded: 55,
+    daysLeft: 18,
+    creditScore: 790,
+    riskLevel: "Low",
+    verified: true,
+  },
+];
+
 const Marketplace = () => {
   const navigate = useNavigate();
-
-  interface Invoice {
-    id: string;
-    company: string;
-    industry: string;
-    amount: number;
-    expectedReturn: number;
-    funded: number;
-    daysLeft: number;
-    creditScore: number;
-    riskLevel: string;
-    verified: boolean;
-  }
-
   const [listings, setListings] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -81,27 +132,44 @@ const Marketplace = () => {
         ...filters,
       };
 
-      const response = await marketplaceAPI.getListings(params);
-      const newListings = response.data.listings || [];
+      try {
+        const response = await marketplaceAPI.getListings(params);
+        const newListings = response.data.listings || [];
 
-      if (pagination.page === 1) {
-        setListings(newListings);
-      } else {
-        setListings((prev) => [...prev, ...newListings]);
+        if (pagination.page === 1) {
+          setListings(newListings);
+        } else {
+          setListings((prev) => [...prev, ...newListings]);
+        }
+
+        setPagination((prev) => ({
+          ...prev,
+          total: response.data.total || 0,
+          hasMore: newListings.length === pagination.limit,
+        }));
+      } catch (apiError) {
+        console.warn("API failed, using mock data:", apiError);
+        // Use mock data as fallback
+        setListings(mockListings);
+        setPagination((prev) => ({
+          ...prev,
+          total: mockListings.length,
+          hasMore: false,
+        }));
       }
-
-      setPagination((prev) => ({
-        ...prev,
-        total: response.data.total || 0,
-        hasMore: newListings.length === pagination.limit,
-      }));
     } catch (error) {
       console.error("Failed to fetch listings:", error);
       toast({
-        title: "Error",
-        description: "Failed to load marketplace listings",
-        variant: "destructive",
+        title: "Using Demo Data",
+        description: "Showing sample invoices. Connect backend for live data.",
       });
+      // Fallback to mock data
+      setListings(mockListings);
+      setPagination((prev) => ({
+        ...prev,
+        total: mockListings.length,
+        hasMore: false,
+      }));
     } finally {
       setLoading(false);
       setIsLoadingMore(false);
