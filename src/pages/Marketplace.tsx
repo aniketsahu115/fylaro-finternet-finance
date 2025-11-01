@@ -96,14 +96,14 @@ const mockListings: Invoice[] = [
 
 const Marketplace = () => {
   console.log("Marketplace component rendering...");
-  
+
   const navigate = useNavigate();
   const [listings, setListings] = useState<Invoice[]>(mockListings);
   const [loading, setLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [filters, setFilters] = useState({
-    industry: "",
-    riskLevel: "",
+    industry: "all",
+    riskLevel: "all",
     minAmount: "",
     maxAmount: "",
     search: "",
@@ -121,7 +121,7 @@ const Marketplace = () => {
   let orderBook = { bids: [], asks: [] };
   let recentTrades: unknown[] = [];
   let marketStats = {};
-  
+
   try {
     const tradingData = useTradingUpdates();
     orderBook = tradingData.orderBook;
@@ -141,7 +141,7 @@ const Marketplace = () => {
       hasMore: false,
     }));
     setLoading(false);
-    
+
     /* Original API call - commented out for debugging
     try {
       if (pagination.page === 1) {
@@ -286,7 +286,7 @@ const Marketplace = () => {
                   <SelectValue placeholder="Industry" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Industries</SelectItem>
+                  <SelectItem value="all">All Industries</SelectItem>
                   <SelectItem value="technology">Technology</SelectItem>
                   <SelectItem value="energy">Energy</SelectItem>
                   <SelectItem value="retail">Retail</SelectItem>
@@ -303,7 +303,7 @@ const Marketplace = () => {
                   <SelectValue placeholder="Risk Level" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Risk</SelectItem>
+                  <SelectItem value="all">All Risk</SelectItem>
                   <SelectItem value="low">Low Risk</SelectItem>
                   <SelectItem value="medium">Medium Risk</SelectItem>
                   <SelectItem value="high">High Risk</SelectItem>
