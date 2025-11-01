@@ -14,7 +14,7 @@ import { toast } from "@/components/ui/use-toast";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import InvestmentAnalysis from "@/components/features/InvestmentAnalysis";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { marketplaceAPI } from "@/services/api";
 import { useTradingUpdates } from "@/hooks/useWebSocket";
 import {
@@ -31,7 +31,21 @@ import {
 
 const Marketplace = () => {
   const navigate = useNavigate();
-  const [listings, setListings] = useState<any[]>([]);
+
+  interface Invoice {
+    id: string;
+    company: string;
+    industry: string;
+    amount: number;
+    expectedReturn: number;
+    funded: number;
+    daysLeft: number;
+    creditScore: number;
+    riskLevel: string;
+    verified: boolean;
+  }
+
+  const [listings, setListings] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [filters, setFilters] = useState({
@@ -53,11 +67,7 @@ const Marketplace = () => {
   // Real-time updates
   const { orderBook, recentTrades, marketStats } = useTradingUpdates();
 
-  useEffect(() => {
-    fetchListings();
-  }, [filters, pagination.page]);
-
-  const fetchListings = async () => {
+  const fetchListings = useCallback(async () => {
     try {
       if (pagination.page === 1) {
         setLoading(true);
@@ -96,7 +106,11 @@ const Marketplace = () => {
       setLoading(false);
       setIsLoadingMore(false);
     }
-  };
+  }, [filters, pagination.page, pagination.limit]);
+
+  useEffect(() => {
+    fetchListings();
+  }, [fetchListings]);
 
   const handleLoadMore = async () => {
     if (!pagination.hasMore || isLoadingMore) return;
@@ -151,7 +165,7 @@ const Marketplace = () => {
           </div>
           <div className="flex items-center space-x-2">
             <Badge variant="secondary">
-              {invoiceListings.length} Active Listings
+              {pagination.total} Active Listings
             </Badge>
           </div>
         </div>
@@ -166,33 +180,46 @@ const Marketplace = () => {
                   <Input
                     placeholder="Search by company or invoice ID..."
                     className="pl-10 bg-secondary/50 border-border/50"
+                    value={filters.search}
+                    onChange={(e) => handleSearch(e.target.value)}
                   />
                 </div>
               </div>
-              <Select>
+              <Select
+                value={filters.industry}
+                onValueChange={(value) => handleFilterChange("industry", value)}
+              >
                 <SelectTrigger className="w-[180px] bg-secondary/50 border-border/50">
                   <SelectValue placeholder="Industry" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Industries</SelectItem>
+                  <SelectItem value="">All Industries</SelectItem>
                   <SelectItem value="technology">Technology</SelectItem>
                   <SelectItem value="energy">Energy</SelectItem>
                   <SelectItem value="retail">Retail</SelectItem>
                   <SelectItem value="healthcare">Healthcare</SelectItem>
                 </SelectContent>
               </Select>
-              <Select>
+              <Select
+                value={filters.riskLevel}
+                onValueChange={(value) =>
+                  handleFilterChange("riskLevel", value)
+                }
+              >
                 <SelectTrigger className="w-[150px] bg-secondary/50 border-border/50">
                   <SelectValue placeholder="Risk Level" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Risk</SelectItem>
+                  <SelectItem value="">All Risk</SelectItem>
                   <SelectItem value="low">Low Risk</SelectItem>
                   <SelectItem value="medium">Medium Risk</SelectItem>
                   <SelectItem value="high">High Risk</SelectItem>
                 </SelectContent>
               </Select>
-              <Select>
+              <Select
+                value={filters.sortBy}
+                onValueChange={(value) => handleFilterChange("sortBy", value)}
+              >
                 <SelectTrigger className="w-[150px] bg-secondary/50 border-border/50">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
@@ -225,128 +252,151 @@ const Marketplace = () => {
         </Card>
 
         {/* Invoice Listings */}
-        <div className="grid gap-6 lg:grid-cols-2">
-          {invoiceListings.map((invoice) => (
-            <Card
-              key={invoice.id}
-              className="glass-card hover:highlight-border transition-smooth group"
-            >
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
-                      <CardTitle className="text-lg">
-                        {invoice.company}
-                      </CardTitle>
-                      {invoice.verified && (
-                        <Shield className="h-4 w-4 text-success" />
-                      )}
-                    </div>
-                    <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                      <span>{invoice.id}</span>
-                      <span>•</span>
-                      <span>{invoice.industry}</span>
-                    </div>
-                  </div>
-                  <Badge
-                    variant="secondary"
-                    className={`${getRiskColor(
-                      invoice.riskLevel
-                    )} bg-secondary/50`}
-                  >
-                    {invoice.riskLevel} Risk
-                  </Badge>
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : listings.length === 0 ? (
+          <Card className="glass-card">
+            <CardContent className="py-12">
+              <div className="text-center space-y-4">
+                <DollarSign className="h-12 w-12 mx-auto text-muted-foreground" />
+                <div>
+                  <h3 className="text-lg font-semibold">No listings found</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Try adjusting your filters or check back later for new
+                    opportunities
+                  </p>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* Amount and Return */}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-2xl font-bold">
-                      {formatAmount(invoice.amount)}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Invoice Amount
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xl font-semibold text-success">
-                      {invoice.expectedReturn}%
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Expected Return
-                    </p>
-                  </div>
-                </div>
-
-                {/* Funding Progress */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span>Funding Progress</span>
-                    <span>{invoice.funded}%</span>
-                  </div>
-                  <Progress value={invoice.funded} />
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>
-                      {formatAmount((invoice.amount * invoice.funded) / 100)}{" "}
-                      raised
-                    </span>
-                    <span>{invoice.daysLeft} days left</span>
-                  </div>
-                </div>
-
-                {/* Credit Score and Metrics */}
-                <div className="grid grid-cols-3 gap-4 pt-2 border-t border-border/50">
-                  <div className="text-center">
-                    <div className="flex items-center justify-center space-x-1">
-                      <Star className="h-4 w-4 text-primary" />
-                      <span className="font-semibold">
-                        {invoice.creditScore}
-                      </span>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-6 lg:grid-cols-2">
+            {listings.map((invoice) => (
+              <Card
+                key={invoice.id}
+                className="glass-card hover:highlight-border transition-smooth group"
+              >
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                      <div className="flex items-center space-x-2">
+                        <CardTitle className="text-lg">
+                          {invoice.company}
+                        </CardTitle>
+                        {invoice.verified && (
+                          <Shield className="h-4 w-4 text-success" />
+                        )}
+                      </div>
+                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                        <span>{invoice.id}</span>
+                        <span>•</span>
+                        <span>{invoice.industry}</span>
+                      </div>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      Credit Score
-                    </p>
+                    <Badge
+                      variant="secondary"
+                      className={`${getRiskColor(
+                        invoice.riskLevel
+                      )} bg-secondary/50`}
+                    >
+                      {invoice.riskLevel} Risk
+                    </Badge>
                   </div>
-                  <div className="text-center">
-                    <div className="flex items-center justify-center space-x-1">
-                      <Clock className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-semibold">{invoice.daysLeft}d</span>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Amount and Return */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-2xl font-bold">
+                        {formatAmount(invoice.amount)}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Invoice Amount
+                      </p>
                     </div>
-                    <p className="text-xs text-muted-foreground">Time Left</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="flex items-center justify-center space-x-1">
-                      <TrendingUp className="h-4 w-4 text-success" />
-                      <span className="font-semibold">
+                    <div className="text-right">
+                      <p className="text-xl font-semibold text-success">
                         {invoice.expectedReturn}%
-                      </span>
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Expected Return
+                      </p>
                     </div>
-                    <p className="text-xs text-muted-foreground">ROI</p>
                   </div>
-                </div>
 
-                {/* Action Buttons */}
-                <div className="flex space-x-2 pt-2">
-                  <Button
-                    className="flex-1 glow group-hover:scale-105 transition-smooth"
-                    onClick={() => navigate("/investment-details")}
-                  >
-                    <Target className="h-4 w-4 mr-2" />
-                    Invest Now
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="flex-1 border-primary/30 hover:bg-primary/10"
-                    onClick={() => navigate("/investment-details")}
-                  >
-                    View Details
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  {/* Funding Progress */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span>Funding Progress</span>
+                      <span>{invoice.funded}%</span>
+                    </div>
+                    <Progress value={invoice.funded} />
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>
+                        {formatAmount((invoice.amount * invoice.funded) / 100)}{" "}
+                        raised
+                      </span>
+                      <span>{invoice.daysLeft} days left</span>
+                    </div>
+                  </div>
+
+                  {/* Credit Score and Metrics */}
+                  <div className="grid grid-cols-3 gap-4 pt-2 border-t border-border/50">
+                    <div className="text-center">
+                      <div className="flex items-center justify-center space-x-1">
+                        <Star className="h-4 w-4 text-primary" />
+                        <span className="font-semibold">
+                          {invoice.creditScore}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Credit Score
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center space-x-1">
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <span className="font-semibold">
+                          {invoice.daysLeft}d
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Time Left</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center space-x-1">
+                        <TrendingUp className="h-4 w-4 text-success" />
+                        <span className="font-semibold">
+                          {invoice.expectedReturn}%
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">ROI</p>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex space-x-2 pt-2">
+                    <Button
+                      className="flex-1 glow group-hover:scale-105 transition-smooth"
+                      onClick={() => navigate("/investment-details")}
+                    >
+                      <Target className="h-4 w-4 mr-2" />
+                      Invest Now
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="flex-1 border-primary/30 hover:bg-primary/10"
+                      onClick={() => navigate("/investment-details")}
+                    >
+                      View Details
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
         {/* Investment Analysis */}
         <InvestmentAnalysis
@@ -355,15 +405,22 @@ const Marketplace = () => {
         />
 
         {/* Load More */}
-        {displayedListings < allInvoiceListings.length && (
+        {pagination.hasMore && !loading && listings.length > 0 && (
           <div className="text-center pt-6">
             <Button
               variant="outline"
               size="lg"
               onClick={handleLoadMore}
-              disabled={isLoading}
+              disabled={isLoadingMore}
             >
-              {isLoading ? "Loading..." : "Load More Listings"}
+              {isLoadingMore ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                "Load More Listings"
+              )}
             </Button>
           </div>
         )}
