@@ -6,6 +6,7 @@ import BinanceBlockchainAnimation from "@/components/animations/BinanceBlockchai
 import GlobalMapAnimation from "@/components/animations/GlobalMapAnimation";
 import ScrollTriggeredFintechIcons from "@/components/animations/ScrollTriggeredFintechIcons";
 import DigitalVaultAnimation from "@/components/animations/DigitalVaultAnimationClean";
+import LiveFinanceAnimation from "@/components/animations/LiveFinanceAnimation";
 import { useNavigate, Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -172,10 +173,7 @@ const Index = () => {
       </section>
 
       {/* Finance Overview */}
-      <section className="relative py-20 border-y border-border/50">
-        <div className="absolute inset-0 z-0">
-          <DigitalVaultAnimation />
-        </div>
+      <section className="relative py-20 border-y border-border/50 bg-gradient-to-b from-background via-background/95 to-background">
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
             <Badge className="mb-6 text-sm px-4 py-2 bg-primary/10 text-primary border-primary/30">
@@ -190,51 +188,63 @@ const Index = () => {
             </p>
           </div>
 
-          <Card className="max-w-4xl mx-auto bg-card border-border shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <BarChart3 className="h-6 w-6 text-primary" />
-                Top Performing Finance Sectors
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {marketData.map((sector, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors border border-border"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-3 h-3 rounded-full bg-primary"></div>
-                      <span className="font-semibold text-foreground">
-                        {sector.name}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-6 text-sm">
-                      <div className="text-right">
-                        <div className="text-muted-foreground">
-                          APY:{" "}
-                          <span className="text-primary font-bold">
-                            {sector.apy}
-                          </span>
-                        </div>
-                        <div className="text-muted-foreground">
-                          Volume: {sector.volume}
-                        </div>
+          {/* Rich Animated Finance Visualization */}
+          <div className="max-w-6xl mx-auto">
+            <Card className="bg-card/50 border-border shadow-2xl backdrop-blur-sm overflow-hidden">
+              <CardContent className="p-0">
+                <LiveFinanceAnimation />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Finance Sectors Summary */}
+          <div className="mt-12 max-w-4xl mx-auto">
+            <Card className="bg-card border-border shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3">
+                  <BarChart3 className="h-6 w-6 text-primary" />
+                  Top Performing Finance Sectors
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {marketData.map((sector, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors border border-border"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-3 h-3 rounded-full bg-primary"></div>
+                        <span className="font-semibold text-foreground">
+                          {sector.name}
+                        </span>
                       </div>
-                      <TrendingUp
-                        className={`h-4 w-4 ${
-                          sector.trend === "up"
-                            ? "text-green-500"
-                            : "text-red-500"
-                        }`}
-                      />
+                      <div className="flex items-center gap-6 text-sm">
+                        <div className="text-right">
+                          <div className="text-muted-foreground">
+                            APY:{" "}
+                            <span className="text-primary font-bold">
+                              {sector.apy}
+                            </span>
+                          </div>
+                          <div className="text-muted-foreground">
+                            Volume: {sector.volume}
+                          </div>
+                        </div>
+                        <TrendingUp
+                          className={`h-4 w-4 ${
+                            sector.trend === "up"
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }`}
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
