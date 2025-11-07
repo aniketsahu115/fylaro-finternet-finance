@@ -7,7 +7,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)]()
 [![React](https://img.shields.io/badge/React-18-blue)]()
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)]()
-[![Blockchain](https://img.shields.io/badge/Blockchain-Ethereum%20%7C%20BSC%20%7C%20Polygon-purple)]()
+[![Blockchain](https://img.shields.io/badge/Blockchain-BSC-purple)]()
 
 ## Project Overview
 
@@ -88,10 +88,10 @@ Fylaro demonstrates the transformative potential of the Finternet by creating a 
 - **Smart Contracts**: Solidity ^0.8.19
 - **Standards**: ERC-1155 for fractional ownership, ERC-721 for unique assets
 - **Security**: OpenZeppelin contracts for security patterns
-- **Networks**: Ethereum, BSC, Polygon support
+- **Networks**: BNB Smart Chain (BSC)
 - **Development**: Hardhat for testing and deployment
 
-###  Database Schema
+### Database Schema
 
 #### Core Models
 
@@ -149,7 +149,7 @@ Payment: {
 
 ---
 
-##  Quick Start Guide
+## Quick Start Guide
 
 ### Prerequisites
 
@@ -193,7 +193,7 @@ npm run dev
 VITE_API_URL=http://localhost:3001/api
 VITE_WS_URL=ws://localhost:3001
 VITE_IPFS_GATEWAY=https://gateway.pinata.cloud/ipfs/
-VITE_BLOCKCHAIN_NETWORK=ethereum
+VITE_BLOCKCHAIN_NETWORK=bsc
 VITE_ENVIRONMENT=development
 ```
 
@@ -218,7 +218,7 @@ PINATA_SECRET_API_KEY=your-pinata-secret-key
 PINATA_JWT=your-pinata-jwt-token
 
 # Blockchain
-ETHEREUM_RPC_URL=your-ethereum-rpc-url
+BSC_RPC_URL=https://bsc-dataseed.binance.org/
 PRIVATE_KEY=your-wallet-private-key
 CONTRACT_ADDRESS=deployed-contract-address
 ```
@@ -598,7 +598,7 @@ npm run health             # Check backend health
 
 ### 📅 Phase 2: Interoperability (6-12 months)
 
-- 🔄 Multi-chain support (Polygon, Arbitrum, BSC)
+- 🔄 Multi-chain bridge support
 - 🔄 Bank API integrations
 - 🔄 Regulatory compliance automation
 - 🔄 Advanced analytics and reporting
@@ -737,7 +737,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - **Radix UI**: Accessible component library
 - **Tailwind CSS**: Utility-first CSS framework
 - **React Community**: Frontend framework and ecosystem
-- **Ethereum Foundation**: Blockchain infrastructure
+- **BNB Chain**: Blockchain infrastructure and support
 - **IPFS**: Decentralized storage protocol
 
 ### 📚 Resources
