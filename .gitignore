@@ -22,3 +22,63 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Documentation and temporary files (keep only main README.md)
+README-COMPLETE.md
+QUICK_START_GUIDE.md
+LIVE_FINANCE_ANIMATION_UPDATE.md
+GOOGLE_FORM_QUICK_ANSWERS.md
+FINTERNET_IMPLEMENTATION_COMPLETE.md
+FEATURE_IMPLEMENTATION_STATUS.md
+FEATURE_IMPLEMENTATION_GUIDE.md
+FEATURE_CONNECTIONS_COMPLETE.md
+FEATURE_COMPLETENESS_SUMMARY.md
+FEATURE_AUDIT_REPORT.md
+DEPLOYMENT_GUIDE.md
+DASHBOARD_FIX.md
+BUTTON_VISIBILITY_FIX.md
+BNB_CHAIN_UPDATE_NOVEMBER_2025.md
+BNB_ANNOUNCEMENT_READY.md
+
+# Documentation fixes
+docs/WALLET_TESTING.md
+docs/ICON_VISIBILITY_FIX.md
+docs/HARDHAT_ERROR_FIX.md
+
+# Build and deployment scripts
+dev-start.bat
+dev-start.js
+dev-start.sh
+deploy.sh
+
+# Multiple hardhat configs (keep only one)
+hardhat.config.cjs
+hardhat.config.mjs
+
+# Cache and build artifacts
+.cache
+.parcel-cache
+.next
+out
+build
+*.tsbuildinfo
+
+# OS files
+Thumbs.db
+.DS_Store
+*.swp
+*.swo
+*~
+
+# IDE
+*.sublime-project
+*.sublime-workspace
+.vscode/settings.json
+.vscode/launch.json
