@@ -472,7 +472,7 @@ const Marketplace = () => {
                   <div className="flex space-x-2 pt-2">
                     <Button
                       className="flex-1 glow group-hover:scale-105 transition-smooth"
-                      onClick={() => navigate("/investment-details")}
+                      onClick={() => navigate(`/investment/${invoice.id}`)}
                     >
                       <Target className="h-4 w-4 mr-2" />
                       Invest Now
@@ -480,7 +480,7 @@ const Marketplace = () => {
                     <Button
                       variant="outline"
                       className="flex-1 border-primary/30 hover:bg-primary/10 active:bg-primary/20 active:border-primary/50 active:opacity-100 focus-visible:bg-primary/10 focus-visible:opacity-100 transition-colors"
-                      onClick={() => navigate("/investment-details")}
+                      onClick={() => navigate(`/investment/${invoice.id}`)}
                       style={{ opacity: 1 }}
                     >
                       View Details
