@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
 interface FinanceNode {
   id: number;
@@ -53,17 +53,17 @@ const LiveFinanceAnimation: React.FC = () => {
 
   // Finance sector colors matching the image
   const sectors = [
-    { name: 'Trade Finance', color: '#F0B90B', value: 85 }, // Yellow
-    { name: 'Supply Chain Finance', color: '#3B82F6', value: 92 }, // Blue
-    { name: 'Working Capital', color: '#10B981', value: 78 }, // Green/Cyan
-    { name: 'Export Finance', color: '#F97316', value: 88 }, // Orange
+    { name: "Trade Finance", color: "#F0B90B", value: 85 }, // Yellow
+    { name: "Supply Chain Finance", color: "#3B82F6", value: 92 }, // Blue
+    { name: "Working Capital", color: "#10B981", value: 78 }, // Green/Cyan
+    { name: "Export Finance", color: "#F97316", value: 88 }, // Orange
   ];
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     // High DPI support
@@ -75,17 +75,17 @@ const LiveFinanceAnimation: React.FC = () => {
 
         canvas.width = rect.width * dpr;
         canvas.height = rect.height * dpr;
-        canvas.style.width = rect.width + 'px';
-        canvas.style.height = rect.height + 'px';
+        canvas.style.width = rect.width + "px";
+        canvas.style.height = rect.height + "px";
 
         ctx.scale(dpr, dpr);
         ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
+        ctx.imageSmoothingQuality = "high";
       }
     };
 
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener("resize", resizeCanvas);
 
     // Mouse tracking for interactivity
     const handleMouseMove = (e: MouseEvent) => {
@@ -96,7 +96,7 @@ const LiveFinanceAnimation: React.FC = () => {
       };
     };
 
-    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener("mousemove", handleMouseMove);
 
     // Initialize finance nodes
     const initializeNodes = () => {
@@ -127,7 +127,8 @@ const LiveFinanceAnimation: React.FC = () => {
           glow: 0.5 + Math.random() * 0.5,
           pulsePhase: Math.random() * Math.PI * 2,
           activity: Math.random(),
-          connections: i < sectors.length - 1 ? [i + 1, (i + 2) % sectors.length] : [0],
+          connections:
+            i < sectors.length - 1 ? [i + 1, (i + 2) % sectors.length] : [0],
           trail: [],
         };
       });
@@ -168,7 +169,7 @@ const LiveFinanceAnimation: React.FC = () => {
       const height = container.clientHeight;
 
       // Clear with dark background
-      ctx.fillStyle = '#0B0E11';
+      ctx.fillStyle = "#0B0E11";
       ctx.fillRect(0, 0, width, height);
 
       // Draw subtle grid
@@ -203,8 +204,13 @@ const LiveFinanceAnimation: React.FC = () => {
       animationFrameRef.current = requestAnimationFrame(animate);
     };
 
-    const drawGrid = (ctx: CanvasRenderingContext2D, width: number, height: number, time: number) => {
-      ctx.strokeStyle = '#1F2937';
+    const drawGrid = (
+      ctx: CanvasRenderingContext2D,
+      width: number,
+      height: number,
+      time: number
+    ) => {
+      ctx.strokeStyle = "#1F2937";
       ctx.lineWidth = 0.5;
       ctx.globalAlpha = 0.15;
 
@@ -228,7 +234,12 @@ const LiveFinanceAnimation: React.FC = () => {
       ctx.globalAlpha = 1;
     };
 
-    const updateNodes = (deltaTime: number, time: number, width: number, height: number) => {
+    const updateNodes = (
+      deltaTime: number,
+      time: number,
+      width: number,
+      height: number
+    ) => {
       nodesRef.current.forEach((node) => {
         // Update pulse animation
         node.pulsePhase += 0.02;
@@ -269,9 +280,11 @@ const LiveFinanceAnimation: React.FC = () => {
         // Keep within bounds with soft boundaries
         const margin = 100;
         if (node.x < margin) node.vx += (margin - node.x) * 0.001;
-        if (node.x > width - margin) node.vx -= (node.x - (width - margin)) * 0.001;
+        if (node.x > width - margin)
+          node.vx -= (node.x - (width - margin)) * 0.001;
         if (node.y < margin) node.vy += (margin - node.y) * 0.001;
-        if (node.y > height - margin) node.vy -= (node.y - (height - margin)) * 0.001;
+        if (node.y > height - margin)
+          node.vy -= (node.y - (height - margin)) * 0.001;
 
         // Update trail
         node.trail.unshift({ x: node.x, y: node.y, opacity: 1 });
@@ -295,7 +308,12 @@ const LiveFinanceAnimation: React.FC = () => {
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           // Animated connection line
-          const gradient = ctx.createLinearGradient(node.x, node.y, targetNode.x, targetNode.y);
+          const gradient = ctx.createLinearGradient(
+            node.x,
+            node.y,
+            targetNode.x,
+            targetNode.y
+          );
           gradient.addColorStop(0, `${node.color}20`);
           gradient.addColorStop(0.5, `${node.color}40`);
           gradient.addColorStop(1, `${targetNode.color}20`);
@@ -310,10 +328,15 @@ const LiveFinanceAnimation: React.FC = () => {
           // Curved line with animation
           const midX = (node.x + targetNode.x) / 2;
           const midY = (node.y + targetNode.y) / 2;
-          const offsetX = -dy / dist * 30 * Math.sin(time * 0.001);
-          const offsetY = dx / dist * 30 * Math.sin(time * 0.001);
+          const offsetX = (-dy / dist) * 30 * Math.sin(time * 0.001);
+          const offsetY = (dx / dist) * 30 * Math.sin(time * 0.001);
 
-          ctx.quadraticCurveTo(midX + offsetX, midY + offsetY, targetNode.x, targetNode.y);
+          ctx.quadraticCurveTo(
+            midX + offsetX,
+            midY + offsetY,
+            targetNode.x,
+            targetNode.y
+          );
           ctx.stroke();
         });
       });
@@ -342,7 +365,14 @@ const LiveFinanceAnimation: React.FC = () => {
 
         // Outer glow
         const glowRadius = node.radius * (1 + node.glow * 0.5);
-        const glowGradient = ctx.createRadialGradient(node.x, node.y, node.radius * 0.5, node.x, node.y, glowRadius);
+        const glowGradient = ctx.createRadialGradient(
+          node.x,
+          node.y,
+          node.radius * 0.5,
+          node.x,
+          node.y,
+          glowRadius
+        );
         glowGradient.addColorStop(0, `${node.color}60`);
         glowGradient.addColorStop(0.7, `${node.color}20`);
         glowGradient.addColorStop(1, `${node.color}00`);
@@ -377,7 +407,8 @@ const LiveFinanceAnimation: React.FC = () => {
         ctx.globalAlpha = 1;
 
         // Inner pulse
-        const pulseRadius = node.radius * (0.6 + Math.sin(time * 0.003 + node.id) * 0.2);
+        const pulseRadius =
+          node.radius * (0.6 + Math.sin(time * 0.003 + node.id) * 0.2);
         ctx.fillStyle = `${node.color}40`;
         ctx.beginPath();
         ctx.arc(node.x, node.y, pulseRadius, 0, Math.PI * 2);
@@ -385,15 +416,23 @@ const LiveFinanceAnimation: React.FC = () => {
 
         // Node label (only if not too small)
         if (node.radius > 15) {
-          ctx.fillStyle = '#FFFFFF';
-          ctx.font = 'bold 11px Inter, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
+          ctx.fillStyle = "#FFFFFF";
+          ctx.font = "bold 11px Inter, sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
           ctx.globalAlpha = 0.9;
-          ctx.fillText(node.label.split(' ')[0], node.x, node.y - node.radius - 12);
-          
-          if (node.label.split(' ').length > 1) {
-            ctx.fillText(node.label.split(' ').slice(1).join(' '), node.x, node.y - node.radius - 24);
+          ctx.fillText(
+            node.label.split(" ")[0],
+            node.x,
+            node.y - node.radius - 12
+          );
+
+          if (node.label.split(" ").length > 1) {
+            ctx.fillText(
+              node.label.split(" ").slice(1).join(" "),
+              node.x,
+              node.y - node.radius - 24
+            );
           }
           ctx.globalAlpha = 1;
         }
@@ -481,7 +520,14 @@ const LiveFinanceAnimation: React.FC = () => {
         if (!fromNode || !toNode) return;
 
         flow.particles.forEach((particle) => {
-          const gradient = ctx.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, particle.size);
+          const gradient = ctx.createRadialGradient(
+            particle.x,
+            particle.y,
+            0,
+            particle.x,
+            particle.y,
+            particle.size
+          );
           gradient.addColorStop(0, `${fromNode.color}FF`);
           gradient.addColorStop(0.5, `${toNode.color}AA`);
           gradient.addColorStop(1, `${toNode.color}00`);
@@ -497,7 +543,11 @@ const LiveFinanceAnimation: React.FC = () => {
       ctx.globalAlpha = 1;
     };
 
-    const updateParticles = (deltaTime: number, width: number, height: number) => {
+    const updateParticles = (
+      deltaTime: number,
+      width: number,
+      height: number
+    ) => {
       particlesRef.current = particlesRef.current.filter((particle) => {
         particle.life -= 0.01;
         particle.x += particle.vx;
@@ -524,13 +574,17 @@ const LiveFinanceAnimation: React.FC = () => {
       ctx.globalAlpha = 1;
     };
 
-    const drawLegend = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+    const drawLegend = (
+      ctx: CanvasRenderingContext2D,
+      width: number,
+      height: number
+    ) => {
       const legendX = width - 220;
       const legendY = 20;
 
       // Legend background
-      ctx.fillStyle = '#0B0E1180';
-      ctx.strokeStyle = '#374151';
+      ctx.fillStyle = "#0B0E1180";
+      ctx.strokeStyle = "#374151";
       ctx.lineWidth = 1;
       ctx.globalAlpha = 0.9;
       ctx.fillRect(legendX, legendY, 200, 30 + sectors.length * 25);
@@ -538,10 +592,10 @@ const LiveFinanceAnimation: React.FC = () => {
       ctx.globalAlpha = 1;
 
       // Legend title
-      ctx.fillStyle = '#FAFAFA';
-      ctx.font = 'bold 12px Inter, sans-serif';
-      ctx.textAlign = 'left';
-      ctx.fillText('Live Finance Overview', legendX + 10, legendY + 18);
+      ctx.fillStyle = "#FAFAFA";
+      ctx.font = "bold 12px Inter, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Live Finance Overview", legendX + 10, legendY + 18);
 
       // Legend items
       sectors.forEach((sector, i) => {
@@ -554,22 +608,30 @@ const LiveFinanceAnimation: React.FC = () => {
         ctx.fill();
 
         // Sector name
-        ctx.fillStyle = '#FAFAFA';
-        ctx.font = '11px Inter, sans-serif';
+        ctx.fillStyle = "#FAFAFA";
+        ctx.font = "11px Inter, sans-serif";
         ctx.fillText(sector.name, legendX + 28, itemY + 4);
       });
     };
 
     const drawTitle = (ctx: CanvasRenderingContext2D, width: number) => {
-      ctx.fillStyle = '#FAFAFA';
-      ctx.font = 'bold 14px Inter, sans-serif';
-      ctx.textAlign = 'center';
+      ctx.fillStyle = "#FAFAFA";
+      ctx.font = "bold 14px Inter, sans-serif";
+      ctx.textAlign = "center";
       ctx.globalAlpha = 0.7;
-      ctx.fillText('Real-time performance across finance sectors', width / 2, 25);
+      ctx.fillText(
+        "Real-time performance across finance sectors",
+        width / 2,
+        25
+      );
       ctx.globalAlpha = 1;
-      ctx.fillStyle = '#9CA3AF';
-      ctx.font = '11px Inter, sans-serif';
-      ctx.fillText('Global finance network activity • Live invoice finance visualization', width / 2, 42);
+      ctx.fillStyle = "#9CA3AF";
+      ctx.font = "11px Inter, sans-serif";
+      ctx.fillText(
+        "Global finance network activity • Live invoice finance visualization",
+        width / 2,
+        42
+      );
     };
 
     animationFrameRef.current = requestAnimationFrame(animate);
@@ -579,15 +641,15 @@ const LiveFinanceAnimation: React.FC = () => {
       setIsVisible(!document.hidden);
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
-      window.removeEventListener('resize', resizeCanvas);
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener("resize", resizeCanvas);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [isVisible]);
 
@@ -597,8 +659,8 @@ const LiveFinanceAnimation: React.FC = () => {
         ref={canvasRef}
         className="w-full h-full"
         style={{
-          display: 'block',
-          background: 'linear-gradient(135deg, #0B0E11 0%, #161A1E 100%)',
+          display: "block",
+          background: "linear-gradient(135deg, #0B0E11 0%, #161A1E 100%)",
         }}
       />
     </div>

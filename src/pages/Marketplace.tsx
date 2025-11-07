@@ -479,8 +479,9 @@ const Marketplace = () => {
                     </Button>
                     <Button
                       variant="outline"
-                      className="flex-1 border-primary/30 hover:bg-primary/10"
+                      className="flex-1 border-primary/30 hover:bg-primary/10 active:bg-primary/20 active:border-primary/50 active:opacity-100 focus-visible:bg-primary/10 focus-visible:opacity-100 transition-colors"
                       onClick={() => navigate("/investment-details")}
+                      style={{ opacity: 1 }}
                     >
                       View Details
                     </Button>
