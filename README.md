@@ -11,7 +11,7 @@
 
 ## Project Overview
 
-**Fylaro** is a comprehensive **invoice tokenization platform** that transforms traditional invoice financing through blockchain technology and the Finternet vision. The platform enables businesses to convert their invoices into tradeable digital assets, providing instant liquidity while offering investors diversified, verified investment opportunities.
+**Fylaro** is a comprehensive **invoice tokenization platform** that transforms traditional invoice financing through blockchain technology and the Finternet vision. The platform enables businesses to convert their invoices into tradeable digital assets, providing instant liquidity offering investors diversified, verified investment opportunities.
 
 ### Vision Statement
 
