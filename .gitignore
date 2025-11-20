@@ -82,3 +82,14 @@ Thumbs.db
 *.sublime-workspace
 .vscode/settings.json
 .vscode/launch.json
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
+# Blockchain
+artifacts/
+cache/
+typechain/
+typechain-types/
