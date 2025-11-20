@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    open: true, // Auto-open browser on server start
   },
   plugins: [
     react(),
