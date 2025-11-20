@@ -592,7 +592,7 @@ npm run health             # Check backend health
 
 ## Finternet Vision & Roadmap
 
-### Phase 1: Tokenization (Current)
+### Phase 1: Tokenization (Current) - Q4 2024
 
 - [x] Invoice tokenization with ERC-1155
 - [x] Basic marketplace functionality
