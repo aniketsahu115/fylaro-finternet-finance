@@ -1,7 +1,8 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "fylaro-finternet-finance",
+  "description": "Invoice Tokenization Platform on BNB Smart Chain with Real-time Trading and Credit Scoring",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

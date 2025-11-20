@@ -13,9 +13,13 @@
 
 **Fylaro** is a comprehensive **invoice tokenization platform** that transforms traditional invoice financing through blockchain technology and the Finternet vision. The platform enables businesses to convert their invoices into tradeable digital assets, providing instant liquidity offering investors diversified, verified investment opportunities.
 
+**Built on BNB Smart Chain** for fast, low-cost transactions with enterprise-grade security.
+
 ### Vision Statement
 
 To democratize access to working capital by creating a global, transparent, and efficient marketplace for invoice financing through tokenization and blockchain technology.
+
+**Mission**: Empower SMEs worldwide with instant access to working capital while providing investors with secure, transparent investment opportunities.
 
 ### Finternet Integration
 
