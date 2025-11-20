@@ -1,6 +1,8 @@
 {
   "name": "fylaro-finternet-finance",
   "description": "Invoice Tokenization Platform on BNB Smart Chain with Real-time Trading and Credit Scoring",
+  "author": "Fylaro Team",
+  "license": "MIT",
   "private": true,
   "version": "1.0.0",
   "type": "module",
