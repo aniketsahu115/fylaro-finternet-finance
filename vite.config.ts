@@ -10,11 +10,9 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     open: true, // Auto-open browser on server start
   },
-  plugins: [
-    react(),
-    mode === 'development' &&
-    componentTagger(),
-  ].filter(Boolean),
+  plugins: [react(), mode === "development" && componentTagger()].filter(
+    Boolean
+  ),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
