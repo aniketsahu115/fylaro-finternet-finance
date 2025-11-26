@@ -16,6 +16,8 @@
     "noUnusedLocals": false,
     "strictNullChecks": false,
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "incremental": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
