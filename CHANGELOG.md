@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-11-26
+
+### Added
+- Comprehensive documentation suite (API, Testing, Environment, Performance)
+- GitHub issue and PR templates for better collaboration
+- Architecture Decision Records (ADR) documentation
+- Security scanning workflow with automated checks
+- Deployment checklist for production releases
+- iOS web app support with mobile-optimized meta tags
+
+### Improved
+- Code splitting for vendor chunks in production builds
+- TypeScript incremental compilation for faster builds
+- Prettier configuration for consistent code formatting
+- Enhanced README with community contribution metrics
+
+### Configuration
+- Added .nvmrc for Node.js version consistency
+- Added .npmrc for package manager settings
+- Enhanced package.json with keywords for discoverability
+
 ## [1.0.0] - 2025-11-20
 
 ### Added
