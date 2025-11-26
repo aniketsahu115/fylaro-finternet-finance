@@ -6,6 +6,16 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "keywords": [
+    "blockchain",
+    "invoice-financing",
+    "tokenization",
+    "bnb-chain",
+    "defi",
+    "smart-contracts",
+    "web3",
+    "finternet"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
