@@ -772,6 +772,8 @@ _Fylaro is more than a platform—it's a movement toward a more inclusive, effic
 - **Uptime**: 99.9% service availability target
 - **Supported Networks**: BNB Smart Chain (Mainnet & Testnet)
 - **Active Users**: Growing community of SMEs and investors
+- **GitHub Stars**: Open source and community-driven
+- **Contributors**: Welcoming developers worldwide
 
 ---
 
