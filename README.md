@@ -770,6 +770,8 @@ _Fylaro is more than a platform—it's a movement toward a more inclusive, effic
 - **Documentation**: 95%+ API documentation coverage
 - **Performance**: <2s page load times
 - **Uptime**: 99.9% service availability target
+- **Supported Networks**: BNB Smart Chain (Mainnet & Testnet)
+- **Active Users**: Growing community of SMEs and investors
 
 ---
 
